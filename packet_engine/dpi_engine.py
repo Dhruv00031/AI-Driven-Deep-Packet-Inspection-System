@@ -1,9 +1,20 @@
 """
+==========================================================
 File Name : dpi_engine.py
-Purpose   : Payload ko inspect karna aur attack detect karna.
+
+Purpose :
+Packet ke payload ko inspect karna aur
+known attacks detect karna.
+
+Abhi hum Rule-Based Detection use kar rahe hain.
+
+Future me isi file me
+Machine Learning Model bhi integrate hoga.
+
+==========================================================
 """
 
-# Rules import kar rahe hain
+# Attack patterns import kar rahe hain
 from packet_engine.rules import SQL_PATTERNS, XSS_PATTERNS
 
 
@@ -11,42 +22,68 @@ def inspect_payload(payload):
     """
     Payload inspect karega.
 
-    Input:
-        payload (String)
+    Parameters
+    ----------
+    payload : String
 
-    Output:
-        SAFE
-        SQL Injection Detected
-        XSS Attack Detected
+    Returns
+    -------
+    Dictionary
+
+    Example
+    -------
+    {
+        "status": "SAFE",
+        "attack": "None"
+    }
+
+    ya
+
+    {
+        "status": "ATTACK",
+        "attack": "SQL Injection"
+    }
     """
 
+    # -------------------------------------------------
     # Agar payload empty hai
     # to inspect karne ka koi matlab nahi.
-    if not payload:
-        return "SAFE"
+    # -------------------------------------------------
 
+    if not payload:
+
+        return {
+            "status": "SAFE",
+            "attack": "None"
+        }
+
+    # -------------------------------------------------
     # Uppercase aur lowercase dono ko same treat karenge.
-    # Payload <ScRiPt> direct comparison me match nahi karega,
-    # isliye payload ko lowercase me convert kar rahe hain taaki wo <script> ke saath match kare.
+    # Isse detection accurate hogi.
+    # -------------------------------------------------
+
     payload = payload.lower()
 
-    # ===============================
-    # SQL Injection Check
-    # ===============================
+    # =================================================
+    # SQL Injection Detection
+    # =================================================
 
     for pattern in SQL_PATTERNS:
 
-        # Comparison easy ho jaye
+        # Pattern ko bhi lowercase bana rahe hain
         pattern = pattern.lower()
 
-        # Agar pattern mil gaya
+        # Agar payload me pattern mil gaya
         if pattern in payload:
 
-            return "SQL Injection Detected"
+            return {
+                "status": "ATTACK",
+                "attack": "SQL Injection"
+            }
 
-    # ===============================
-    # XSS Check
-    # ===============================
+    # =================================================
+    # XSS Detection
+    # =================================================
 
     for pattern in XSS_PATTERNS:
 
@@ -54,28 +91,63 @@ def inspect_payload(payload):
 
         if pattern in payload:
 
-            return "XSS Attack Detected"
+            return {
+                "status": "ATTACK",
+                "attack": "Cross Site Scripting (XSS)"
+            }
 
-    # Agar kuch nahi mila
-    return "SAFE"
+    # =================================================
+    # Agar koi attack detect nahi hua
+    # =================================================
+
+    return {
+        "status": "SAFE",
+        "attack": "None"
+    }
 
 
 
 
+# Q1. Why use Rule-Based Detection first instead of AI?
 
-# Q1. Why use a Rule Engine first instead of AI?
-#     Rule Engine deterministic hota hai. 
-#     Known attacks ko instantly detect karta hai.
-#     AI unknown patterns detect karne me help karta hai. 
-#     Dono ka combination production systems me use hota hai.
+# Rule Engine deterministic hota hai.
+# Known attacks ko instantly detect karta hai.
+# AI unknown attacks detect karne me help karta hai.
+# Real IDS systems dono techniques ka combination use karte hain.
 
 
 # Q2. Why convert payload to lowercase?
-#     Case sensitivity remove karne ke liye,
-#     taaki <SCRIPT> aur <script> dono detect ho saken.
+
+# Taaki case sensitivity remove ho jaye.
+# Example:
+# <SCRIPT>
+# aur
+# <script>
+# dono detect ho saken.
 
 
-# Q3. Why keep patterns in rules.py?
-#     Taaki naye attack signatures add karna easy ho
-#     aur detection logic (dpi_engine.py) ko modify na karna pade.
-#     Isse code modular aur maintainable rehta hai.
+# Q3. Why keep patterns inside rules.py?
+
+# Taaki naye attack signatures add karna easy ho.
+# Detection logic ko modify nahi karna pade.
+# Isse code modular aur maintainable rehta hai.
+
+
+# Q4. Why return a dictionary instead of a string?
+
+# Future me hume sirf SAFE ya ATTACK nahi chahiye hoga.
+# Hume attack ka type bhi chahiye hoga.
+# Example:
+# Status
+# Attack Name
+# Severity
+# Timestamp
+# Isliye dictionary return karna better approach hai.
+
+
+# Q5. Why inspect only payload?
+
+# Deep Packet Inspection ka main objective
+# packet ke actual data ko inspect karna hota hai.
+# Header sirf routing information deta hai.
+# Attack signatures mostly payload me hoti hain.

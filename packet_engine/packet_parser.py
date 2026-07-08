@@ -1,78 +1,169 @@
 """
+==========================================================
 File Name : packet_parser.py
-Purpose   : Packet se useful information extract karna.
+
+Purpose :
+Captured packet se useful information extract karna.
+
+Ye file sirf packet ko read karegi aur
+ek clean dictionary return karegi.
+
+==========================================================
 """
 
+# Required Scapy Layers import kar rahe hain
 from scapy.layers.inet import IP, TCP, UDP
 from scapy.packet import Raw
 
 
 def parse_packet(packet):
-
     """
-    Ye function packet ko read karega aur
-    sari useful information dictionary me return karega.
+    Packet ko parse karega.
+
+    Parameters
+    ----------
+    packet : Scapy Packet
+
+    Returns
+    -------
+    Dictionary
+
+    Agar packet useful nahi hua
+    to None return karega.
     """
 
-    # Dictionary banayi hai jisme packet ki details store hongi
+    # Dictionary banayi hai jisme
+    # packet ki sari information store hogi.
     packet_data = {}
 
-    # Agar packet me IP layer nahi hai
-    # to aage inspect karna zaruri nahi.
+    # ---------------------------------------------------
+    # Agar IP layer hi nahi hai
+    # to packet inspect karna useful nahi.
+    # ---------------------------------------------------
     if not packet.haslayer(IP):
         return None
 
-    # Source aur Destination IP
+    # ----------------------------
+    # Source & Destination IP
+    # ----------------------------
+
     packet_data["source_ip"] = packet[IP].src
     packet_data["destination_ip"] = packet[IP].dst
 
-    # Packet ki total length
+    # ----------------------------
+    # Packet Length
+    # ----------------------------
+
     packet_data["length"] = len(packet)
+
+    # ---------------------------------------------------
+    # Protocol detect kar rahe hain
+    # ---------------------------------------------------
+
+    if packet.haslayer(TCP):
+
+        packet_data["protocol"] = "TCP"
+
+        packet_data["source_port"] = packet[TCP].sport
+
+        packet_data["destination_port"] = packet[TCP].dport
+
+    elif packet.haslayer(UDP):
+
+        packet_data["protocol"] = "UDP"
+
+        packet_data["source_port"] = packet[UDP].sport
+
+        packet_data["destination_port"] = packet[UDP].dport
+
+    else:
+
+        packet_data["protocol"] = "OTHER"
+
+        packet_data["source_port"] = "-"
+
+        packet_data["destination_port"] = "-"
+
+    # ---------------------------------------------------
+    # Payload Extraction
+    # ---------------------------------------------------
 
     # Default payload empty rakha hai
     packet_data["payload"] = ""
 
-    # Check kar rahe hain ki packet me Raw layer hai ya nahi
+    # Raw layer me actual application data hota hai.
     if packet.haslayer(Raw):
 
         try:
 
-            # Bytes ko readable text me convert kar rahe hain
+            # Bytes ko readable text me convert kar rahe hain.
             payload = packet[Raw].load.decode(errors="ignore")
 
             packet_data["payload"] = payload
 
         except Exception:
 
-            # Agar decode nahi hua
+            # Agar decode fail ho jaye
             packet_data["payload"] = ""
 
+    # ---------------------------------------------------
+    # Final dictionary return kar rahe hain.
+    # Isko DPI Engine, Database aur Dashboard use karenge.
+    # ---------------------------------------------------
 
+    return packet_data
 
 
 
 
 
 # Q1. Why do we use haslayer()?
-#   Because not every packet contains the same protocol layers. Checking first prevents runtime errors.
+
+# Har packet me same protocol layers nahi hoti.
+# Agar bina check kiye packet[IP] ya packet[TCP]
+# access karenge to runtime error aa sakta hai.
+# Isliye pehle haslayer() use karte hain.
+
 
 # Q2. Why use len(packet)?
-#   It gives the total size of the packet in bytes, which is useful for traffic analysis and machine learning features.
 
-# Q3. Why separate capture.py and packet_info.py?
-#   Because of the Single Responsibility Principle (SRP). One module should perform one well-defined task. This makes the code easier to maintain, test, and extend.
+# Packet ka total size bytes me milta hai.
+# Ye traffic analysis aur ML features
+# ke liye useful hota hai.
 
-# Q4. Why Raw layer?
-#     Because actual application data (payload) is usually 
-#     stored in the Raw layer. DPI inspects this data instead of
-#     just the packet headers.
 
-# Q5. Why decode?
-#     Network payload is stored as bytes. 
-#     We decode it into readable text so that attack signatures
-#     such as SQL Injection or XSS can be matched.
+# Q3. Why Raw layer?
 
-# Q6. Why use a dictionary?
-#     A dictionary groups all packet attributes together 
-#     (IPs, ports, protocol, payload), making it easy to 
-#     pass the data between modules and later convert it into JSON for APIs.
+# Actual application data (Payload)
+# Raw layer me hota hai.
+# Deep Packet Inspection isi data ko inspect karta hai.
+
+
+# Q4. Why decode()?
+
+# Network payload bytes format me hota hai.
+# Hum usko readable text me convert karte hain
+# taaki SQL Injection aur XSS patterns detect
+# kiye ja saken.
+
+
+# Q5. Why use a dictionary?
+
+# Dictionary me sari packet information
+# ek jagah store ho jati hai.
+# Later isi dictionary ko
+# • DPI Engine
+# • MongoDB
+# • REST API
+# • Frontend
+# directly use kar sakte hain.
+
+
+# Q6. Why return instead of print?
+
+# Professional software me modules
+# generally data return karte hain.
+# Sirf main.py decide karega ki
+# data print karna hai,
+# database me save karna hai
+# ya frontend ko bhejna hai.
