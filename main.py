@@ -5,74 +5,74 @@ File Name : main.py
 Purpose :
 Ye project ka Main Controller hai.
 
-Is file ka kaam hai:
+Ye file project ke saare modules ko connect karti hai.
 
-1. Packet Capture Start karna
-2. Packet Parse karna
-3. Payload Inspect karna
-4. Result Display karna
+Responsibilities :
+1. Packet Capture Start Karna
+2. Packet Parse Karna
+3. DPI Detection Karna
+4. Console Output Dikhana
 
-Author : AI-DPI Team
+Future Scope :
+Future me
+
+• MongoDB
+• REST API
+• Dashboard
+• Machine Learning
+
+isi file ke through integrate honge.
+
 ==========================================================
 """
 
-# Packet Capture Module
+# ==========================================================
+# Required Imports
+# ==========================================================
+
+# Packet Capture
 from packet_engine.capture import start_capture
 
-# Packet Parser Module
+# Packet Parser
 from packet_engine.packet_parser import parse_packet
 
 # DPI Engine
-from packet_engine.dpi_engine import inspect_payload
+from packet_engine.dpi_engine import inspect_packet
 
+# Helper Functions
+from packet_engine.utils import (
+    generate_packet_id,
+    generate_payload_preview,
+    format_packet_size
+)
+
+# Project Constants
+from packet_engine.constants import (
+    DIVIDER,
+    SUB_DIVIDER,
+    PROJECT_NAME,
+    PROJECT_VERSION
+)
 
 # ==========================================================
-# Packet Counter
+# Display Packet
 # ==========================================================
 
-# Kitne packets process hue uska count
-packet_number = 0
-
-
-def process_packet(packet):
+def display_packet(packet_data, inspection_result):
     """
-    Har packet ke liye ye function automatically execute hoga.
+    Packet ko professional format me
+    console par print karega.
     """
 
-    global packet_number
+    print()
 
-    # Packet Number increase kar rahe hain
-    packet_number += 1
+    print(DIVIDER)
 
-    # -----------------------------------------
-    # Packet ko parse karte hain
-    # -----------------------------------------
+    print(f"Packet ID            : {generate_packet_id()}")
 
-    packet_data = parse_packet(packet)
+    print(f"Timestamp            : {packet_data['timestamp']}")
 
-    # Agar packet useful nahi hai
-    # to usko ignore kar do.
-    if packet_data is None:
-        return
-
-    # -----------------------------------------
-    # Payload inspect karte hain
-    # -----------------------------------------
-
-    inspection_result = inspect_payload(
-        packet_data["payload"]
-    )
-
-    # -----------------------------------------
-    # Output Display
-    # -----------------------------------------
-
-    print("\n")
-    print("=" * 70)
-
-    print(f"Packet Number        : {packet_number}")
-
-    print("-" * 70)
+    print(SUB_DIVIDER)
 
     print(f"Source IP            : {packet_data['source_ip']}")
 
@@ -84,36 +84,121 @@ def process_packet(packet):
 
     print(f"Destination Port     : {packet_data['destination_port']}")
 
-    print(f"Packet Length        : {packet_data['length']} Bytes")
+    print(f"Packet Length        : {format_packet_size(packet_data['length'])}")
 
-    # Payload bahut bada ho sakta hai.
-    # Isliye sirf pehle 100 characters dikha rahe hain.
-    payload_preview = packet_data["payload"][:100]
+    print(
+        f"Payload Preview      : "
+        f"{generate_payload_preview(packet_data['payload'])}"
+    )
 
-    if payload_preview == "":
-        payload_preview = "<No Readable Payload>"
-
-    print(f"Payload Preview      : {payload_preview}")
-
-    print("-" * 70)
+    print(SUB_DIVIDER)
 
     print(f"Status               : {inspection_result['status']}")
 
     print(f"Attack Type          : {inspection_result['attack']}")
 
-    print("=" * 70)
+    print(f"Severity             : {inspection_result['severity']}")
+
+    print(
+        f"Matched Pattern      : "
+        f"{inspection_result['matched_pattern']}"
+    )
+
+    print(DIVIDER)
 
 
 # ==========================================================
-# Project Start
+# Process Packet
 # ==========================================================
 
-print("\n")
-print("=" * 70)
-print("      AI Driven Deep Packet Inspection System")
-print("=" * 70)
-print("Listening for packets...")
-print("Press Ctrl + C to stop.\n")
+def process_packet(packet):
+    """
+    Har packet ke liye
+    automatically execute hoga.
+    """
 
-# Packet Capture Start
-start_capture(process_packet)
+    # Packet Parse
+    packet_data = parse_packet(packet)
+
+    # Agar packet useful nahi hai
+    if packet_data is None:
+
+        return
+
+    # DPI Detection
+    inspection_result = inspect_packet(packet_data)
+
+    # Console Output
+    display_packet(packet_data, inspection_result)
+
+
+# ==========================================================
+# Main Function
+# ==========================================================
+
+def main():
+    """
+    Project Start Karega.
+    """
+
+    print()
+
+    print(DIVIDER)
+
+    print(PROJECT_NAME)
+
+    print(f"Version : {PROJECT_VERSION}")
+
+    print(DIVIDER)
+
+    # Packet Capture Start
+    start_capture(process_packet)
+
+
+# ==========================================================
+# Program Entry Point
+# ==========================================================
+
+if __name__ == "__main__":
+
+    main()
+
+
+
+
+
+# Q1. Why create main.py?
+
+    # Ye project ka Controller hai.
+    # Saare modules isi file se connect hote hain.
+
+
+# Q2. Why separate display_packet()?
+
+    # Printing aur processing
+    # dono alag responsibilities hain.
+    # Isse code readable banta hai.
+
+
+# Q3. Why process_packet()?
+
+    # Har packet capture hone ke baad
+    # isi function ko callback ke through
+    # automatically call kiya jata hai.
+
+
+# Q4. Why use helper functions?
+
+    # Packet ID
+    # Payload Preview
+    # Packet Size Formatting
+    # alag file me rakhne se
+    # code reusable ho jata hai.
+
+
+# Q5. Why call inspect_packet() instead of inspect_payload()?
+
+    # Future me sirf payload nahi,
+    # complete packet analyse hoga.
+    # Isliye architecture future ready banaya gaya hai.
+

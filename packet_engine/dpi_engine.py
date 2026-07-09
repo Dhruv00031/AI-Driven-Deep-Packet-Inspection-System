@@ -6,148 +6,186 @@ Purpose :
 Packet ke payload ko inspect karna aur
 known attacks detect karna.
 
-Abhi hum Rule-Based Detection use kar rahe hain.
+Ye file sirf detection ka kaam karegi.
 
-Future me isi file me
-Machine Learning Model bhi integrate hoga.
+Responsibilities :
+• Rule-Based Detection
+• Attack Identification
+• Response Generation
+
+Future Scope :
+Future me
+
+• Machine Learning Detection
+• Anomaly Detection
+• Threat Intelligence
+• Hybrid Detection
+
+isi file me add honge.
 
 ==========================================================
 """
 
-# Attack patterns import kar rahe hain
-from packet_engine.rules import SQL_PATTERNS, XSS_PATTERNS
+# ==========================================================
+# Required Imports
+# ==========================================================
 
+# Attack Signatures
+from packet_engine.rules import (
+    SQL_PATTERNS,
+    XSS_PATTERNS
+)
+
+# Response Templates
+from packet_engine.responses import (
+    SAFE_RESPONSE,
+    SQL_RESPONSE,
+    XSS_RESPONSE
+)
+
+# ==========================================================
+# Payload Inspection
+# ==========================================================
 
 def inspect_payload(payload):
     """
-    Payload inspect karega.
+    Payload ko inspect karega.
 
     Parameters
     ----------
-    payload : String
+    payload : str
 
     Returns
     -------
     Dictionary
-
-    Example
-    -------
-    {
-        "status": "SAFE",
-        "attack": "None"
-    }
-
-    ya
-
-    {
-        "status": "ATTACK",
-        "attack": "SQL Injection"
-    }
     """
 
-    # -------------------------------------------------
-    # Agar payload empty hai
-    # to inspect karne ka koi matlab nahi.
-    # -------------------------------------------------
+    # ------------------------------------------------------
+    # Empty Payload
+    # ------------------------------------------------------
 
     if not payload:
 
-        return {
-            "status": "SAFE",
-            "attack": "None"
-        }
+        return SAFE_RESPONSE.copy()
 
-    # -------------------------------------------------
-    # Uppercase aur lowercase dono ko same treat karenge.
-    # Isse detection accurate hogi.
-    # -------------------------------------------------
+    # Uppercase aur lowercase
+    # dono same treat honge.
 
     payload = payload.lower()
 
-    # =================================================
+    # ======================================================
     # SQL Injection Detection
-    # =================================================
+    # ======================================================
 
     for pattern in SQL_PATTERNS:
 
-        # Pattern ko bhi lowercase bana rahe hain
-        pattern = pattern.lower()
+        if pattern.lower() in payload:
 
-        # Agar payload me pattern mil gaya
-        if pattern in payload:
+            response = SQL_RESPONSE.copy()
 
-            return {
-                "status": "ATTACK",
-                "attack": "SQL Injection"
-            }
+            response["matched_pattern"] = pattern
 
-    # =================================================
+            return response
+
+    # ======================================================
     # XSS Detection
-    # =================================================
+    # ======================================================
 
     for pattern in XSS_PATTERNS:
 
-        pattern = pattern.lower()
+        if pattern.lower() in payload:
 
-        if pattern in payload:
+            response = XSS_RESPONSE.copy()
 
-            return {
-                "status": "ATTACK",
-                "attack": "Cross Site Scripting (XSS)"
-            }
+            response["matched_pattern"] = pattern
 
-    # =================================================
-    # Agar koi attack detect nahi hua
-    # =================================================
+            return response
 
-    return {
-        "status": "SAFE",
-        "attack": "None"
-    }
+    # ======================================================
+    # Safe Packet
+    # ======================================================
+
+    return SAFE_RESPONSE.copy()
 
 
+# ==========================================================
+# Complete Packet Inspection
+# ==========================================================
+
+def inspect_packet(packet_data):
+    """
+    Complete packet inspect karega.
+
+    Abhi sirf payload inspect ho raha hai.
+
+    Future me
+
+    Source IP
+
+    Destination IP
+
+    Ports
+
+    Packet Length
+
+    Time
+
+    Protocol
+
+    sab analyse honge.
+    """
+
+    payload = packet_data.get("payload", "")
+
+    return inspect_payload(payload)
 
 
-# Q1. Why use Rule-Based Detection first instead of AI?
 
-# Rule Engine deterministic hota hai.
-# Known attacks ko instantly detect karta hai.
-# AI unknown attacks detect karne me help karta hai.
-# Real IDS systems dono techniques ka combination use karte hain.
+
+
+# Q1. Why Rule-Based Detection first?
+
+    # Rule Engine known attacks ko
+    # instantly detect karta hai.
+    # AI unknown attacks detect karega.
+    # Production IDS me dono ka
+    # combination use hota hai.
 
 
 # Q2. Why convert payload to lowercase?
 
-# Taaki case sensitivity remove ho jaye.
-# Example:
-# <SCRIPT>
-# aur
-# <script>
-# dono detect ho saken.
+    # Taaki
+    # <SCRIPT>
+    # aur
+    # <script>
+    # dono detect ho saken.
 
 
-# Q3. Why keep patterns inside rules.py?
+# Q3. Why use response.copy() ?
 
-# Taaki naye attack signatures add karna easy ho.
-# Detection logic ko modify nahi karna pade.
-# Isse code modular aur maintainable rehta hai.
-
-
-# Q4. Why return a dictionary instead of a string?
-
-# Future me hume sirf SAFE ya ATTACK nahi chahiye hoga.
-# Hume attack ka type bhi chahiye hoga.
-# Example:
-# Status
-# Attack Name
-# Severity
-# Timestamp
-# Isliye dictionary return karna better approach hai.
+    # SAFE_RESPONSE global dictionary hai.
+    # Agar directly modify karenge
+    # to original dictionary permanently
+    # change ho jayegi.
+    # copy() ek nayi dictionary banata hai.
 
 
-# Q5. Why inspect only payload?
+# Q4. Why inspect_packet() if only payload is used?
 
-# Deep Packet Inspection ka main objective
-# packet ke actual data ko inspect karna hota hai.
-# Header sirf routing information deta hai.
-# Attack signatures mostly payload me hoti hain.
+    # Future me poora packet analyse hoga.
+    # Abhi architecture future ready bana rahe hain.
+
+
+# Q5. Why keep signatures outside this file?
+
+    # Detection aur signatures
+    # alag responsibilities hain.
+    # Isse maintainability improve hoti hai.
+
+
+# Q6. Why return Dictionary?
+
+    # Future me Dashboard,
+    # MongoDB aur APIs
+    # isi response ko directly use karenge.
+
