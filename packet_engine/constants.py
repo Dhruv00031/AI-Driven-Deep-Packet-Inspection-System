@@ -53,6 +53,15 @@ STATUS_ATTACK = "ATTACK"
 
 
 # ==========================================================
+# NETWORK INTERFACE
+# ==========================================================
+
+# Default Network Interface
+# Change to "Wi-Fi" if you switch to wireless network.
+NETWORK_INTERFACE = "Ethernet"
+
+
+# ==========================================================
 # ATTACK TYPES
 # ==========================================================
 
@@ -190,6 +199,7 @@ API_ENABLED = False
 # Frontend Dashboard
 
 DASHBOARD_ENABLED = False
+
 
 
 

@@ -31,6 +31,8 @@ isi file me add honge.
 
 # Scapy ki sniff() function import kar rahe hain.
 # Ye real-time packets capture karti hai.
+
+
 from scapy.all import sniff
 
 # Project constants import kar rahe hain.
@@ -40,8 +42,10 @@ from packet_engine.constants import (
     DIVIDER,
     START_MESSAGE,
     LISTENING_MESSAGE,
-    STOP_MESSAGE
+    STOP_MESSAGE,
+    NETWORK_INTERFACE
 )
+
 
 # ==========================================================
 # Start Packet Capture
@@ -95,14 +99,9 @@ def start_capture(callback):
     # ======================================================
 
     sniff(
-
-        # Har packet aane par
-        # callback function execute hoga.
+        iface=NETWORK_INTERFACE,
         prn=callback,
-
-        # Packets RAM me store nahi honge.
         store=False
-
     )
 
 
