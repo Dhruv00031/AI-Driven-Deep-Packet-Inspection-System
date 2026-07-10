@@ -30,6 +30,14 @@ isi file ke through integrate honge.
 # Required Imports
 # ==========================================================
 
+
+from database.models import create_packet_document
+
+from database.mongodb import (
+    insert_packet,
+    check_connection
+)
+
 # Packet Capture
 from packet_engine.capture import start_capture
 
@@ -68,7 +76,7 @@ def display_packet(packet_data, inspection_result):
 
     print(DIVIDER)
 
-    print(f"Packet ID            : {generate_packet_id()}")
+    print(f"Packet ID : {packet_data['packet_id']}")
 
     print(f"Timestamp            : {packet_data['timestamp']}")
 
@@ -113,11 +121,14 @@ def display_packet(packet_data, inspection_result):
 
 def process_packet(packet):
     """
-    Har packet ke liye
+    Har captured packet ke liye
     automatically execute hoga.
     """
 
+    # ----------------------------------------
     # Packet Parse
+    # ----------------------------------------
+
     packet_data = parse_packet(packet)
 
     # Agar packet useful nahi hai
@@ -125,11 +136,41 @@ def process_packet(packet):
 
         return
 
-    # DPI Detection
+    # ----------------------------------------
+    # Packet ID sirf ek baar generate hoga
+    # ----------------------------------------
+
+    packet_data["packet_id"] = generate_packet_id()
+
+    # ----------------------------------------
+    # Rule Based Detection
+    # ----------------------------------------
+
     inspection_result = inspect_packet(packet_data)
 
+    # ----------------------------------------
+    # MongoDB Document
+    # ----------------------------------------
+
+    packet_document = create_packet_document(
+        packet_data,
+        inspection_result
+    )
+
+    # ----------------------------------------
+    # Save Packet
+    # ----------------------------------------
+
+    insert_packet(packet_document)
+
+    # ----------------------------------------
     # Console Output
-    display_packet(packet_data, inspection_result)
+    # ----------------------------------------
+
+    display_packet(
+        packet_data,
+        inspection_result
+    )
 
 
 # ==========================================================
@@ -150,6 +191,14 @@ def main():
     print(f"Version : {PROJECT_VERSION}")
 
     print(DIVIDER)
+
+    print("Checking MongoDB Connection...\n")
+
+    if not check_connection():
+
+        print("Project Stopped.")
+
+        return
 
     # Packet Capture Start
     start_capture(process_packet)
