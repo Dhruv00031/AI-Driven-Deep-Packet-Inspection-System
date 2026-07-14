@@ -1,0 +1,363 @@
+/*
+==========================================================
+File Name : dashboard.css
+
+Purpose :
+
+Dashboard Page Styling
+
+Responsibilities :
+
+• Dashboard Layout
+• Cards
+• Tables
+• Main Content
+
+Future Scope :
+
+• Charts
+• Graphs
+• Responsive Design
+• Live Monitoring
+
+==========================================================
+*/
+
+
+/* ==========================================================
+   Dashboard Wrapper
+========================================================== */
+
+/*
+Pure dashboard ko
+2 parts me divide karenge.
+
+Sidebar
+
+↓
+
+Main Content
+*/
+
+.dashboard-wrapper{
+
+    display:flex;
+
+    min-height:100vh;
+
+}
+
+
+/* ==========================================================
+   Main Content
+========================================================== */
+
+/*
+Sidebar ke baad
+remaining screen
+main content ko milegi.
+*/
+
+.main-content{
+
+    flex:1;
+
+    padding:30px;
+
+    background:#0f172a;
+
+}
+
+
+/* ==========================================================
+   Dashboard Cards Container
+========================================================== */
+
+/*
+Cards ko
+responsive grid me
+show karenge.
+*/
+
+.cards-container{
+
+    display:grid;
+
+    grid-template-columns:repeat(4,1fr);
+
+    gap:20px;
+
+    margin-top:30px;
+
+}
+
+
+/* ==========================================================
+   Dashboard Card
+========================================================== */
+
+.dashboard-card{
+
+    background:#1e293b;
+
+    border-radius:15px;
+
+    padding:25px;
+
+    border:1px solid #334155;
+
+    transition:0.3s;
+
+}
+
+
+/*
+Hover Effect
+*/
+
+.dashboard-card:hover{
+
+    transform:translateY(-6px);
+
+    border-color:#3b82f6;
+
+}
+
+/* ==========================================================
+   Dashboard Card Layout
+========================================================== */
+
+.dashboard-card{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:20px;
+
+}
+
+
+/* ==========================================================
+   Card Icon
+========================================================== */
+
+.card-icon{
+
+    width:70px;
+
+    height:70px;
+
+    border-radius:15px;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    font-size:28px;
+
+    color:white;
+
+}
+
+
+/* ==========================================================
+   Different Icon Colors
+========================================================== */
+
+.packet-icon{
+
+    background:#2563eb;
+
+}
+
+
+.safe-icon{
+
+    background:#22c55e;
+
+}
+
+
+.threat-icon{
+
+    background:#ef4444;
+
+}
+
+
+.tcp-icon{
+
+    background:#7c3aed;
+
+}
+
+
+/* ==========================================================
+   Card Content
+========================================================== */
+
+.card-content{
+
+    flex:1;
+
+}
+
+
+/* ==========================================================
+   Card Number
+========================================================== */
+
+.card-content h2{
+
+    margin-top:8px;
+
+}
+
+
+/* ==========================================================
+   Card Heading
+========================================================== */
+
+.dashboard-card h5{
+
+    color:#94a3b8;
+
+    font-size:15px;
+
+}
+
+
+/* ==========================================================
+   Card Number
+========================================================== */
+
+.dashboard-card h2{
+
+    margin-top:15px;
+
+    font-size:34px;
+
+    color:white;
+
+}
+
+
+/* ==========================================================
+   Table Section
+========================================================== */
+
+.table-section{
+
+    margin-top:40px;
+
+}
+
+
+/* ==========================================================
+   Section Heading
+========================================================== */
+
+.table-section h3{
+
+    color:white;
+
+    margin-bottom:20px;
+
+}
+
+
+/* ==========================================================
+   Bootstrap Table
+========================================================== */
+
+.table{
+
+    border-radius:10px;
+
+    overflow:hidden;
+
+}
+
+
+/* ==========================================================
+   Responsive Design
+========================================================== */
+
+/*
+Laptop se
+Tablet par
+2 Cards
+*/
+
+@media(max-width:992px){
+
+.cards-container{
+
+grid-template-columns:repeat(2,1fr);
+
+}
+
+}
+
+
+/*
+Mobile par
+
+1 Card
+*/
+
+@media(max-width:576px){
+
+.cards-container{
+
+grid-template-columns:1fr;
+
+}
+
+}
+
+
+
+
+
+
+
+
+/*
+
+Q1 Why use Grid instead of Flexbox?
+
+Grid 2-D layout hai.
+
+Cards ko rows aur columns
+me arrange karna easy hota hai.
+
+
+Q2 Why use transition?
+
+Smooth hover effect
+ke liye.
+
+
+Q3 Why use media queries?
+
+Responsive website
+banane ke liye.
+
+
+Q4 Why use flex:1?
+
+Main content
+remaining space
+occupy karega.
+
+
+Q5 Why use min-height:100vh?
+
+Pure screen height
+cover karne ke liye.
+
+*/

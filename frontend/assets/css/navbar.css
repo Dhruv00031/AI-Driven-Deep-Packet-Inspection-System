@@ -1,0 +1,271 @@
+/*
+==========================================================
+File Name : navbar.css
+
+Purpose :
+
+Top Navigation Bar Styling
+
+Responsibilities :
+
+• Navbar Layout
+• Search Box
+• User Profile
+• Notification Icon
+
+Future Scope :
+
+• Live Notifications
+• Dark / Light Theme
+• User Dropdown
+
+==========================================================
+*/
+
+
+/* ==========================================================
+   Top Navbar
+========================================================== */
+
+/*
+Navbar hamesha
+dashboard ke top par rahegi.
+*/
+
+.top-navbar{
+
+    background:#111827;
+
+    border:1px solid #334155;
+
+    border-radius:15px;
+
+    padding:18px 25px;
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+}
+
+
+/* ==========================================================
+   Navbar Title
+========================================================== */
+
+.top-navbar h2{
+
+    color:white;
+
+    font-size:28px;
+
+    font-weight:600;
+
+    margin:0;
+
+}
+
+
+/* ==========================================================
+   Right Section
+========================================================== */
+
+.nav-right{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:20px;
+
+}
+
+
+/* ==========================================================
+   Search Box
+========================================================== */
+
+.search-box{
+
+    width:260px;
+
+    background:#1e293b;
+
+    border:1px solid #334155;
+
+    border-radius:8px;
+
+    color:white;
+
+    padding:10px 15px;
+
+}
+
+
+/*
+Search Focus
+*/
+
+.search-box:focus{
+
+    outline:none;
+
+    border-color:#3b82f6;
+
+}
+
+
+/* ==========================================================
+   Notification Icon
+========================================================== */
+
+.notification{
+
+    width:45px;
+
+    height:45px;
+
+    border-radius:50%;
+
+    background:#1e293b;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    cursor:pointer;
+
+    transition:.3s;
+
+}
+
+
+/*
+Hover
+*/
+
+.notification:hover{
+
+    background:#2563eb;
+
+}
+
+
+/* ==========================================================
+   User Profile
+========================================================== */
+
+.user-profile{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:10px;
+
+}
+
+
+/*
+Avatar
+*/
+
+.user-avatar{
+
+    width:45px;
+
+    height:45px;
+
+    border-radius:50%;
+
+    background:#2563eb;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    color:white;
+
+    font-weight:bold;
+
+}
+
+
+/*
+Username
+*/
+
+.user-name{
+
+    color:white;
+
+    font-weight:500;
+
+}
+
+
+/* ==========================================================
+   Responsive
+========================================================== */
+
+@media(max-width:768px){
+
+.search-box{
+
+display:none;
+
+}
+
+.top-navbar{
+
+flex-direction:column;
+
+gap:20px;
+
+}
+
+}
+
+
+/* ==========================================================
+   Viva Questions
+========================================================== */
+
+/*
+
+Q1 Why justify-content:space-between?
+
+Left aur right
+sections opposite sides
+par aa jati hain.
+
+
+Q2 Why gap?
+
+Spacing maintain
+karna easy hota hai.
+
+
+Q3 Why hide search on mobile?
+
+Space bachane ke liye.
+
+
+Q4 Why use border-radius?
+
+Modern UI
+look dene ke liye.
+
+
+Q5 Why use Flexbox?
+
+Navbar ek
+1-D layout hai.
+
+*/

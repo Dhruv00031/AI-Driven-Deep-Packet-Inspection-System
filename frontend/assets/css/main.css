@@ -1,0 +1,391 @@
+/*
+==========================================================
+File Name : main.css
+
+Purpose :
+
+Global CSS File
+
+Ye file project ki
+overall styling define karti hai.
+
+Responsibilities :
+
+• Global Theme
+• Body Styling
+• Login Page
+• Buttons
+• Inputs
+• Typography
+
+Future Scope :
+
+• Animations
+• Dark / Light Theme
+• Responsive Utilities
+
+==========================================================
+*/
+
+
+/* ==========================================================
+   Google Font
+========================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+
+/* ==========================================================
+   Global Reset
+========================================================== */
+
+/*
+Sab browsers ka default
+margin aur padding remove kar dete hain.
+*/
+
+*{
+
+    margin:0;
+
+    padding:0;
+
+    box-sizing:border-box;
+
+}
+
+
+/* ==========================================================
+   Body
+========================================================== */
+
+/*
+Pure project ka background.
+*/
+
+body{
+
+    font-family:'Poppins',sans-serif;
+
+    background:#0f172a;
+
+    color:#f8fafc;
+
+}
+
+
+/* ==========================================================
+   Login Container
+========================================================== */
+
+/*
+Pure screen ka background.
+
+Gradient use kar rahe hain
+taaki professional feel aaye.
+*/
+
+.login-container{
+
+    min-height:100vh;
+
+    background:linear-gradient(
+        135deg,
+        #0f172a,
+        #111827,
+        #1e293b
+    );
+
+}
+
+
+/* ==========================================================
+   Login Card
+========================================================== */
+
+/*
+Glass Effect Card
+*/
+
+.login-card{
+
+    border-radius:20px;
+
+    background:rgba(30,41,59,0.80);
+
+    backdrop-filter:blur(14px);
+
+    border:1px solid rgba(255,255,255,0.08);
+
+    color:white;
+
+}
+
+/* ==========================================================
+   System Title
+========================================================== */
+
+.system-title{
+
+    font-size:30px;
+
+    font-weight:700;
+
+    color:#3b82f6;
+
+}
+
+
+/* ==========================================================
+   Subtitle
+========================================================== */
+
+.system-subtitle{
+
+    color:#94a3b8;
+
+    font-size:14px;
+
+}
+
+
+/* ==========================================================
+   Labels
+========================================================== */
+
+.form-label{
+
+    color:#cbd5e1;
+
+    font-weight:500;
+
+}
+
+
+/* ==========================================================
+   Input Boxes
+========================================================== */
+
+.form-control{
+
+    background:#111827;
+
+    border:1px solid #334155;
+
+    color:white;
+
+}
+
+
+/*
+Input focus hone par
+Blue border dikhegi.
+*/
+
+.form-control:focus{
+
+    background:#111827;
+
+    color:white;
+
+    border-color:#3b82f6;
+
+    box-shadow:none;
+
+}
+
+
+/*
+Placeholder ka color
+*/
+
+.form-control::placeholder{
+
+    color:#64748b;
+
+}
+
+
+/* ==========================================================
+   Login Button
+========================================================== */
+
+.btn-primary{
+
+    background:#2563eb;
+
+    border:none;
+
+    padding:12px;
+
+    font-size:16px;
+
+    font-weight:600;
+
+    border-radius:10px;
+
+    transition:0.3s;
+
+}
+
+
+/*
+Hover Effect
+*/
+
+.btn-primary:hover{
+
+    background:#1d4ed8;
+
+    transform:translateY(-2px);
+
+}
+
+
+/* ==========================================================
+   Card Animation
+========================================================== */
+
+/*
+Page load hote hi
+Card thoda smooth
+appear hoga.
+*/
+
+.login-card{
+
+    animation:fadeIn 0.7s ease;
+
+}
+
+
+/* ==========================================================
+   Keyframes
+========================================================== */
+
+@keyframes fadeIn{
+
+    from{
+
+        opacity:0;
+
+        transform:translateY(30px);
+
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:translateY(0);
+
+    }
+
+}
+
+
+/* ==========================================================
+   Cyber Grid Background
+========================================================== */
+
+.login-container::before{
+
+    content:"";
+
+    position:absolute;
+
+    inset:0;
+
+    background-image:
+
+    linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+
+    linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+
+    background-size:40px 40px;
+
+    pointer-events:none;
+
+}
+
+
+/* ==========================================================
+   Logo
+========================================================== */
+
+.logo-circle{
+
+    width:90px;
+
+    height:90px;
+
+    border-radius:50%;
+
+    margin:auto;
+
+    margin-bottom:20px;
+
+    background:#2563eb;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    font-size:42px;
+
+    box-shadow:0 0 25px rgba(59,130,246,.45);
+
+}
+
+
+.system-tagline{
+
+    color:#22c55e;
+
+    font-size:13px;
+
+    letter-spacing:1px;
+
+    margin-top:10px;
+
+}
+
+
+
+
+
+
+/*
+
+Q1 Why use box-sizing:border-box?
+
+Padding aur border
+width ke andar count hote hain.
+Responsive design easy hoti hai.
+
+
+Q2 Why use Poppins?
+
+Modern UI ke liye
+clean font hai.
+
+
+Q3 Why use Linear Gradient?
+
+Simple color ke comparison me
+zyada professional look deta hai.
+
+
+Q4 Why use transition?
+
+Hover effects smooth banane ke liye.
+
+
+Q5 Why use animation?
+
+Website static nahi lagti.
+Professional feel aata hai.
+
+*/

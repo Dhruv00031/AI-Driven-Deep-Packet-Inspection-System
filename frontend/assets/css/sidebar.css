@@ -1,0 +1,232 @@
+/*
+==========================================================
+File Name : sidebar.css
+
+Purpose :
+
+Sidebar Styling
+
+Responsibilities :
+
+• Sidebar Layout
+• Navigation Menu
+• Logo
+• Hover Effects
+• Active Menu
+
+Future Scope :
+
+• Collapse Sidebar
+• Icons
+• Notification Badge
+
+Author : AI-DPI Team
+==========================================================
+*/
+
+
+/* ==========================================================
+   Sidebar
+========================================================== */
+
+/*
+Sidebar fixed width ki hogi.
+
+Ye dashboard ke left side
+hamesha visible rahegi.
+*/
+
+.sidebar{
+
+    width:260px;
+
+    min-height:100vh;
+
+    background:#111827;
+
+    border-right:1px solid #334155;
+
+    padding:30px 20px;
+
+}
+
+
+/* ==========================================================
+   Logo
+========================================================== */
+
+.logo{
+
+    color:#3b82f6;
+
+    text-align:center;
+
+    font-size:28px;
+
+    font-weight:700;
+
+    margin-bottom:50px;
+
+}
+
+
+/* ==========================================================
+   Menu
+========================================================== */
+
+/*
+Default list style
+remove kar dete hain.
+*/
+
+.sidebar ul{
+
+    list-style:none;
+
+    padding:0;
+
+}
+
+
+/* ==========================================================
+   Menu Item
+========================================================== */
+
+.sidebar ul li{
+
+    padding:15px 18px;
+
+    margin-bottom:12px;
+
+    border-radius:10px;
+
+    color:#cbd5e1;
+
+    cursor:pointer;
+
+    transition:0.3s;
+
+}
+
+
+/* ==========================================================
+   Hover Effect
+========================================================== */
+
+.sidebar ul li:hover{
+
+    background:#2563eb;
+
+    color:white;
+
+}
+
+
+/* ==========================================================
+   Active Menu
+========================================================== */
+
+/*
+Current page
+highlight hogi.
+*/
+
+.sidebar ul li.active{
+
+    background:#3b82f6;
+
+    color:white;
+
+}
+
+
+/* ==========================================================
+   Divider
+========================================================== */
+
+.sidebar hr{
+
+    border:1px solid #334155;
+
+    margin:25px 0;
+
+}
+
+
+/* ==========================================================
+   Responsive
+========================================================== */
+
+@media(max-width:992px){
+
+.sidebar{
+
+width:220px;
+
+}
+
+}
+
+
+@media(max-width:768px){
+
+.sidebar{
+
+display:none;
+
+}
+
+}
+
+
+/* ==========================================================
+   Sidebar Links
+========================================================== */
+
+.sidebar a{
+
+    text-decoration:none;
+
+    color:inherit;
+
+    display:block;
+
+}
+
+
+
+
+
+/*
+
+Q1 Why fixed sidebar width?
+
+Har page par
+consistent layout milega.
+
+
+Q2 Why remove list-style?
+
+Bullet points
+dashboard me
+professional nahi lagte.
+
+
+Q3 Why use transition?
+
+Hover smooth
+dikhane ke liye.
+
+
+Q4 Why highlight active menu?
+
+User ko pata chale
+ki wo kis page par hai.
+
+
+Q5 Why hide sidebar on mobile?
+
+Chhoti screen par
+space bachane ke liye.
+
+*/
