@@ -39,6 +39,12 @@ const attackPackets = document.getElementById("attackPackets");
 const tcpPackets = document.getElementById("tcpPackets");
 
 
+const sqlButton = document.getElementById("sqlButton");
+
+
+const xssButton = document.getElementById("xssButton");
+
+
 // ==========================================================
 // Packet Table
 // ==========================================================
@@ -214,6 +220,37 @@ async function refreshDashboard() {
     await loadPackets();
 
 }
+
+
+// ==========================================================
+// Attack Simulator Buttons
+// ==========================================================
+
+sqlButton.addEventListener("click", async () => {
+
+    const response = await generateSQLAttack();
+
+    alert(response.message);
+
+    loadDashboard();
+
+    loadPackets();
+
+});
+
+
+
+xssButton.addEventListener("click", async () => {
+
+    const response = await generateXSSAttack();
+
+    alert(response.message);
+
+    loadDashboard();
+
+    loadPackets();
+
+});
 
 
 // ==========================================================

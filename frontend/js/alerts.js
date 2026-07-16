@@ -19,7 +19,6 @@ Future Scope :
 • Export Report
 • AI Risk Analysis
 
-Author : AI-DPI Team
 ==========================================================
 */
 
@@ -144,6 +143,9 @@ async function loadThreats() {
 
     }
 
+
+    console.log(threats);
+    
     // Threat rows add karo
     threats.forEach(packet => {
 

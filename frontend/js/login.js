@@ -18,7 +18,6 @@ Future Scope :
 • Role Based Login
 • Remember Me
 
-Author : AI-DPI Team
 ==========================================================
 */
 

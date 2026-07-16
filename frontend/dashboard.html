@@ -92,7 +92,7 @@ Future Scope :
 
     <!-- Sidebar -->
 
-    <aside class="sidebar">
+    <div id="sidebar">
 
         <h3 class="logo">
 
@@ -154,7 +154,7 @@ Future Scope :
 
         </ul>
 
-    </aside>
+    </div>
 
     <!-- Main Content -->
 
@@ -162,7 +162,7 @@ Future Scope :
 
         <!-- Navbar -->
 
-        <nav class="top-navbar">
+        <div id="navbar">
 
             <!-- Left Side -->
 
@@ -211,7 +211,7 @@ Future Scope :
 
             </div>
 
-        </nav>
+        </div>
 
         <!-- Dashboard Cards -->
 
@@ -334,6 +334,38 @@ Future Scope :
             </div>
 
         </section>
+
+        <!-- ======================================================
+        Attack Simulator
+        ====================================================== -->
+
+        <section class="table-section">
+
+            <h3>
+
+                Attack Simulator
+
+            </h3>
+
+            <button
+                id="sqlButton"
+                class="btn btn-danger me-2">
+
+                Generate SQL Injection
+
+            </button>
+
+            <button
+                id="xssButton"
+                class="btn btn-warning">
+
+                Generate XSS
+
+            </button>
+
+        </section>
+
+        
         <!-- Recent Packets -->
 
         <section class="table-section">
@@ -397,7 +429,8 @@ Future Scope :
     src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
 </script>
 
-<!-- Dashboard JS -->
+<!-- Dashboard Logic -->
+<script src="js/components.js"></script>
 
 <!-- API Layer -->
 <script src="js/api.js"></script>

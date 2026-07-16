@@ -75,6 +75,52 @@ async function getDashboardData(){
 
 
 // ==========================================================
+// Generate SQL Attack
+// ==========================================================
+
+async function generateSQLAttack() {
+
+    const response = await fetch(
+
+        `${BASE_URL}/simulator/sql`,
+
+        {
+
+            method: "POST"
+
+        }
+
+    );
+
+    return await response.json();
+
+}
+
+
+
+// ==========================================================
+// Generate XSS Attack
+// ==========================================================
+
+async function generateXSSAttack() {
+
+    const response = await fetch(
+
+        `${BASE_URL}/simulator/xss`,
+
+        {
+
+            method: "POST"
+
+        }
+
+    );
+
+    return await response.json();
+
+}
+
+// ==========================================================
 // Packets API
 // ==========================================================
 

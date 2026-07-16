@@ -51,6 +51,9 @@ const dashboardRoutes = require("./routes/dashboardRoutes");
 const threatRoutes = require("./routes/threatRoutes");
 
 
+const simulatorRoutes = require("./routes/simulatorRoutes");
+
+
 // ==========================================================
 // Create Express App
 // ==========================================================
@@ -84,6 +87,9 @@ app.use("/api",dashboardRoutes);
 
 
 app.use("/api", threatRoutes);
+
+
+app.use("/api", simulatorRoutes);
 
 
 /*
