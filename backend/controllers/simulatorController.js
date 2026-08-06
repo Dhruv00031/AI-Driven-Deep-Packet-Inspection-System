@@ -9,6 +9,8 @@ const path = require("path");
 
 function runSimulator(type, successMessage, res) {
 
+    console.log("Executing Python Simulator...");
+
     exec(
 
         `python3 -m simulator.run_simulator ${type}`,
@@ -21,6 +23,10 @@ function runSimulator(type, successMessage, res) {
 
         (error, stdout, stderr) => {
 
+            console.log("stdout:", stdout);
+            console.log("stderr:", stderr);
+            console.log("error:", error);
+            
             if (error) {
 
                 return res.status(500).json({
@@ -60,6 +66,8 @@ function runSimulator(type, successMessage, res) {
 }
 
 const generateSQLAttack = (req, res) => {
+
+    console.log("=== SQL Button Clicked ===");
 
     runSimulator(
 
