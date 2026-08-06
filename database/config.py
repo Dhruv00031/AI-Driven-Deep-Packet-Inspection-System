@@ -32,7 +32,7 @@ Future me
 # Local MongoDB Server
 # Compass bhi isi URL se connect hota hai.
 
-MONGO_URI = "mongodb://localhost:27017"
+MONGO_URI = "mongodb+srv://admin:admin31@ascendoscluster.qxeprxd.mongodb.net/?retryWrites=true&w=majority&appName=AscendOSCluster"
 
 # ==========================================================
 # Database Name
