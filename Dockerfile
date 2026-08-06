@@ -9,23 +9,25 @@ RUN apt-get update && \
     apt-get install -y python3 python3-pip && \
     rm -rf /var/lib/apt/lists/*
 
-# Working directory
+# Create Working Directory
 WORKDIR /app
 
-# Copy project
+# Copy Entire Project
 COPY . .
 
-# Install backend dependencies
+# Install Node Dependencies
 WORKDIR /app/backend
 RUN npm install
 
-# Install Python dependencies
+# Install Python Dependencies
 WORKDIR /app
-RUN pip3 install -r requirements.txt
+RUN pip3 install --no-cache-dir -r requirements.txt
 
-# Expose backend port
+# Expose Backend Port
 EXPOSE 5000
 
-# Start backend
+# Go to Backend
 WORKDIR /app/backend
+
+# Start Backend
 CMD ["npm", "start"]

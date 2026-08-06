@@ -26,12 +26,11 @@ from simulator.attack_simulator import simulate_attack
 
 def main():
 
-    # No argument passed
     if len(sys.argv) < 2:
 
         print("Usage : python -m simulator.run_simulator [sql|xss]")
 
-        return
+        sys.exit(1)
 
     attack = sys.argv[1].lower()
 
@@ -47,17 +46,28 @@ def main():
 
         print("Invalid Attack Type")
 
-        return
+        sys.exit(1)
 
-    packet = simulate_attack(choice)
+    try:
 
-    if packet:
+        packet = simulate_attack(choice)
 
-        print("Packet Generated Successfully")
+        if packet:
 
-        print(packet)
+            print("Packet Generated Successfully")
 
+            print(packet)
 
-if __name__ == "__main__":
+            sys.exit(0)
 
-    main()
+        else:
+
+            print("Simulation Failed")
+
+            sys.exit(1)
+
+    except Exception as error:
+
+        print(f"Simulation Failed : {error}")
+
+        sys.exit(1)

@@ -101,7 +101,7 @@ def insert_packet(packet_data):
 
         print(f"Packet Insert Failed : {error}")
 
-        return None
+        raise RuntimeError(f"Packet Insert Failed : {error}")
 
 
 # ==========================================================

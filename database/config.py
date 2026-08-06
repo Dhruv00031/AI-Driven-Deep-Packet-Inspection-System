@@ -32,7 +32,9 @@ Future me
 # Local MongoDB Server
 # Compass bhi isi URL se connect hota hai.
 
-MONGO_URI = "mongodb+srv://admin:admin31@ascendoscluster.qxeprxd.mongodb.net/?retryWrites=true&w=majority&appName=AscendOSCluster"
+import os
+
+MONGO_URI = os.getenv("MONGO_URI")
 
 # ==========================================================
 # Database Name
