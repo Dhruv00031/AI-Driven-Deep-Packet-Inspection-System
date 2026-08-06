@@ -58,7 +58,7 @@ STATUS_ATTACK = "ATTACK"
 
 # Default Network Interface
 # Change to "Wi-Fi" if you switch to wireless network.
-NETWORK_INTERFACE = "Wi-Fi"
+NETWORK_INTERFACE = "Ethernet"
 
 
 # ==========================================================
