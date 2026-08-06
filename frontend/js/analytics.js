@@ -33,6 +33,7 @@ let protocolChart;
 
 let severityChart;
 
+let attackChart;
 
 // ==========================================================
 // Load Analytics
@@ -62,6 +63,8 @@ async function loadAnalytics() {
 
     createProtocolChart(packets);
 
+    createAttackChart(packets);
+
     createSeverityChart(packets);
 
     createTopSourceTable(packets);
@@ -72,6 +75,109 @@ async function loadAnalytics() {
 
 }
 
+// ==========================================================
+// Attack Distribution Chart
+// ==========================================================
+
+function createAttackChart(packets) {
+
+    let attacks = {
+
+        SAFE: 0,
+
+        SQL: 0,
+
+        XSS: 0
+
+    };
+
+    packets.forEach(packet => {
+
+        if (packet.status === "SAFE") {
+
+            attacks.SAFE++;
+
+        }
+
+        else if (packet.attack === "SQL Injection") {
+
+            attacks.SQL++;
+
+        }
+
+        else if (
+
+            packet.attack ===
+
+            "Cross Site Scripting (XSS)"
+
+        ) {
+
+            attacks.XSS++;
+
+        }
+
+    });
+
+    const ctx = document
+
+        .getElementById("attackChart")
+
+        .getContext("2d");
+
+    if (attackChart) {
+
+        attackChart.destroy();
+
+    }
+
+    attackChart = new Chart(ctx, {
+
+        type: "doughnut",
+
+        data: {
+
+            labels: [
+
+                "Safe",
+
+                "SQL Injection",
+
+                "XSS"
+
+            ],
+
+            datasets: [
+
+                {
+
+                    data: [
+
+                        attacks.SAFE,
+
+                        attacks.SQL,
+
+                        attacks.XSS
+
+                    ]
+
+                }
+
+            ]
+
+        },
+
+        options: {
+
+            responsive: true,
+
+            maintainAspectRatio: false
+
+        }
+
+    });
+
+}
 
 // ==========================================================
 // Top Destination IP Table
@@ -634,6 +740,9 @@ function createTopSourceTable(packets) {
     });
 
 }
+
+
+
 
 
 

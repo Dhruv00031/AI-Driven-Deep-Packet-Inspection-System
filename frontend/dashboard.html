@@ -80,6 +80,12 @@ Future Scope :
         rel="stylesheet"
         href="assets/css/navbar.css">
 
+    <!--Notification CSS-->
+    
+    <link
+        rel="stylesheet"
+        href="assets/css/notifications.css">
+
 </head>
 
 <body>
@@ -159,6 +165,108 @@ Future Scope :
     <!-- Main Content -->
 
     <main class="main-content">
+
+        <!-- ======================================================
+            Top Navbar
+        ====================================================== -->
+
+        <nav class="top-navbar">
+
+            <!-- Left -->
+
+            <h2>
+
+                Dashboard
+
+            </h2>
+
+            <!-- Right -->
+
+            <div class="nav-right">
+
+                <!-- Search -->
+
+                <input
+                    id="searchBox"
+                    type="text"
+                    class="search-box"
+                    placeholder="Search Packet ID...">
+
+                <!-- Notification -->
+
+                <div class="notification-wrapper">
+
+                    <div
+                        id="notificationBell"
+                        class="notification">
+
+                        <i class="bi bi-bell-fill"></i>
+
+                        <span
+                            id="notificationBadge"
+                            class="notification-badge">
+
+                            0
+
+                        </span>
+
+                    </div>
+
+                    <!-- Dropdown -->
+
+                    <div
+                        id="notificationDropdown"
+                        class="notification-dropdown">
+
+                        <h6>
+
+                            Notifications
+
+                        </h6>
+
+                        <div id="notificationList">
+
+                            <p class="text-muted">
+
+                                No Notifications
+
+                            </p>
+
+                        </div>
+
+                        <button
+                            id="clearNotifications"
+                            class="btn btn-sm btn-primary w-100">
+
+                            Mark All Read
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+                <!-- User -->
+
+                <div class="user-profile">
+
+                    <div class="user-avatar">
+
+                        D
+
+                    </div>
+
+                    <div class="user-name">
+
+                        Dhruv
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </nav>
 
         <!-- Navbar -->
 
@@ -347,21 +455,42 @@ Future Scope :
 
             </h3>
 
-            <button
-                id="sqlButton"
-                class="btn btn-danger me-2">
+            <section class="simulator-card">
 
-                Generate SQL Injection
+                <h3>
 
-            </button>
+                    Attack Simulator
 
-            <button
-                id="xssButton"
-                class="btn btn-warning">
+                </h3>
 
-                Generate XSS
+                <p>
 
-            </button>
+                    Generate simulated cyber attacks to test
+                    the AI-DPI Detection Engine.
+
+                </p>
+
+                <div class="simulator-buttons">
+
+                    <button
+                        id="sqlButton"
+                        class="btn btn-danger">
+
+                        SQL Injection
+
+                    </button>
+
+                    <button
+                        id="xssButton"
+                        class="btn btn-warning">
+
+                        XSS
+
+                    </button>
+
+                </div>
+
+            </section>
 
         </section>
 
@@ -423,6 +552,14 @@ Future Scope :
 
 </div>
 
+<!-- ======================================================
+     Notification Container
+====================================================== -->
+
+<div id="notificationContainer"
+    class="notification-container">
+</div>
+
 <!-- Bootstrap -->
 
 <script
@@ -435,8 +572,12 @@ Future Scope :
 <!-- API Layer -->
 <script src="js/api.js"></script>
 
+<!--Notification-center-->
+<script src="js/notifications.js"></script>
+
 <!-- Dashboard Logic -->
 <script src="js/dashboard.js"></script>
+
 
 </body>
 

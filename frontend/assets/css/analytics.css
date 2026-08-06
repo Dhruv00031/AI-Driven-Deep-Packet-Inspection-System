@@ -119,3 +119,45 @@ Analytics Page
     }
 
 }
+
+/* ==========================================================
+   Charts
+========================================================== */
+
+.charts-container {
+
+    display: grid;
+
+    grid-template-columns: repeat(2, 1fr);
+
+    gap: 20px;
+
+    margin-top: 20px;
+
+}
+
+.chart-card {
+
+    background: #1f2937;
+
+    border-radius: 10px;
+
+    padding: 20px;
+
+}
+
+.chart-card h4 {
+
+    color: white;
+
+    margin-bottom: 20px;
+
+}
+
+canvas {
+
+    width: 100% !important;
+
+    height: 300px !important;
+
+}

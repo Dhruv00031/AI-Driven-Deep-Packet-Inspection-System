@@ -15,6 +15,8 @@ const router = express.Router();
 
 const packetController = require("../controllers/packetController");
 
+console.log(packetController);
+
 // ==========================================================
 // GET : All Packets
 // ==========================================================
@@ -22,6 +24,8 @@ const packetController = require("../controllers/packetController");
 router.get("/packets", packetController.getPackets);
 
 router.get("/packets/:packetId", packetController.getPacket);
+
+router.delete("/packets", packetController.deleteAllPackets);
 
 module.exports = router;
 

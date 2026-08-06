@@ -21,6 +21,19 @@ Future Scope :
 ==========================================================
 */
 
+// ==========================================================
+// Store Packets
+// ==========================================================
+
+// ==========================================================
+// Notification Tracking
+// ==========================================================
+
+let lastThreatId = null;
+
+let allPackets = [];
+
+let previousThreatCount = 0;
 
 // ==========================================================
 // Dashboard Cards
@@ -50,6 +63,12 @@ const xssButton = document.getElementById("xssButton");
 // ==========================================================
 
 const packetTable = document.getElementById("packetTable");
+
+// ==========================================================
+// Search Box
+// ==========================================================
+
+const searchBox = document.getElementById("searchBox");
 
 
 // ==========================================================
@@ -112,6 +131,8 @@ async function loadDashboard() {
 
     const dashboard = response.data;
 
+    //Update cards
+
     totalPackets.textContent = dashboard.totalPackets;
 
     safePackets.textContent = dashboard.safePackets;
@@ -120,8 +141,103 @@ async function loadDashboard() {
 
     tcpPackets.textContent = dashboard.tcpPackets;
 
+    // ==========================================================
+    // Check for New Threat
+    // ==========================================================
+
+    const threatResponse = await getThreats();
+
+    if (threatResponse.success && threatResponse.data.length > 0) {
+
+        const latestThreat = threatResponse.data[0];
+
+        const currentId = latestThreat._id;
+
+        if (currentId !== lastThreatId) {
+
+            lastThreatId = currentId;
+
+            addNotification(latestThreat);
+
+            showThreatNotification(latestThreat);
+
+        }
+    }
 }
 
+// ==========================================================
+// Display Packets
+// ==========================================================
+
+function displayPackets(packets) {
+
+    packetTable.innerHTML = "";
+
+    packets.forEach(packet => {
+
+        const row = document.createElement("tr");
+
+        row.style.cursor = "pointer";
+
+        row.innerHTML = `
+
+            <td>${packet.packet_id || packet._id}</td>
+
+            <td>${packet.source_ip}</td>
+
+            <td>${packet.destination_ip}</td>
+
+            <td>
+
+                <span class="badge ${getStatusClass(packet.status)}">
+
+                    ${packet.status}
+
+                </span>
+
+            </td>
+
+        `;
+
+        row.addEventListener("click", () => {
+
+            const packetId = packet.packet_id || packet._id;
+
+            window.location.href =
+                `packet-details.html?id=${packetId}`;
+
+        });
+
+        packetTable.appendChild(row);
+
+    });
+
+}
+
+
+// ==========================================================
+// Search Packet
+// ==========================================================
+
+searchBox.addEventListener("keyup", () => {
+
+    const keyword = searchBox.value.toLowerCase();
+
+    const filteredPackets = allPackets.filter(packet => {
+
+        const id = String(
+
+            packet.packet_id || packet._id || ""
+
+        ).toLowerCase();
+
+        return id.includes(keyword);
+
+    });
+
+    displayPackets(filteredPackets);
+
+});
 
 // ==========================================================
 // Load Recent Packets
@@ -147,52 +263,9 @@ async function loadPackets() {
 
     }
 
-    // Purane rows remove karo
-    packetTable.innerHTML = "";
+    allPackets = response.data.slice(0, 25);
 
-    // Latest 10 packets
-    const packets = response.data.slice(0, 10);
-
-    packets.forEach(packet => {
-
-        const row = document.createElement("tr");
-
-        row.innerHTML = `
-
-            <td>${packet.packet_id}</td>
-
-            <td>${packet.source_ip}</td>
-
-            <td>${packet.destination_ip}</td>
-
-            <td>
-
-                <span class="badge ${getStatusClass(packet.status)}">
-
-                    ${packet.status}
-
-                </span>
-
-            </td>
-
-        `;
-
-        // ==========================================================
-        // Row Click Event
-        // ==========================================================
-
-        row.style.cursor = "pointer";
-
-        row.addEventListener("click", () => {
-
-            window.location.href =
-                `packet-details.html?packetId=${packet.packet_id}`;
-
-        });
-
-        packetTable.appendChild(row);
-
-    });
+    displayPackets(allPackets);
 
 }
 
@@ -232,9 +305,9 @@ sqlButton.addEventListener("click", async () => {
 
     alert(response.message);
 
-    loadDashboard();
+    await loadDashboard();
 
-    loadPackets();
+    await loadPackets();
 
 });
 
@@ -246,9 +319,9 @@ xssButton.addEventListener("click", async () => {
 
     alert(response.message);
 
-    loadDashboard();
+    await loadDashboard();
 
-    loadPackets();
+    await loadPackets();
 
 });
 
@@ -270,7 +343,15 @@ Har 5 seconds baad
 Dashboard automatically update hoga.
 */
 
-setInterval(refreshDashboard, 5000);
+const REFRESH_INTERVAL = 5000;
+
+setInterval(
+
+    refreshDashboard,
+
+    REFRESH_INTERVAL
+
+);
 
 
 

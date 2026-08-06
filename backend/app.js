@@ -54,6 +54,9 @@ const threatRoutes = require("./routes/threatRoutes");
 const simulatorRoutes = require("./routes/simulatorRoutes");
 
 
+const analyticsRoutes = require("./routes/analyticsRoutes");
+
+
 // ==========================================================
 // Create Express App
 // ==========================================================
@@ -90,6 +93,10 @@ app.use("/api", threatRoutes);
 
 
 app.use("/api", simulatorRoutes);
+
+
+app.use("/api", analyticsRoutes);
+
 
 
 /*

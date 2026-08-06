@@ -1,0 +1,51 @@
+.notification-container{
+
+    position:fixed;
+
+    top:20px;
+
+    right:20px;
+
+    z-index:9999;
+
+}
+
+.threat-notification{
+
+    background:#dc3545;
+
+    color:white;
+
+    padding:15px;
+
+    border-radius:8px;
+
+    margin-bottom:10px;
+
+    min-width:280px;
+
+    box-shadow:0 5px 15px rgba(0,0,0,.3);
+
+    animation:slideIn .3s ease;
+
+}
+
+@keyframes slideIn{
+
+    from{
+
+        opacity:0;
+
+        transform:translateX(100%);
+
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:translateX(0);
+
+    }
+
+}

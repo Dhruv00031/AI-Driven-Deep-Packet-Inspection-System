@@ -20,7 +20,7 @@ const params = new URLSearchParams(
 
 );
 
-const packetId = params.get("packetId");
+const packetId = params.get("id");
 
 
 // ==========================================================
@@ -57,6 +57,49 @@ async function loadPacket() {
         }
 
         const packet = result.data;
+
+        // ================================
+        // Severity Badge
+        // ================================
+
+        let severityBadge = "";
+
+        switch (packet.severity) {
+
+            case "LOW":
+
+                severityBadge =
+                    '<span class="badge bg-success">LOW</span>';
+
+                break;
+
+            case "MEDIUM":
+
+                severityBadge =
+                    '<span class="badge bg-warning text-dark">MEDIUM</span>';
+
+                break;
+
+            case "HIGH":
+
+                severityBadge =
+                    '<span class="badge bg-orange text-white">HIGH</span>';
+
+                break;
+
+            case "CRITICAL":
+
+                severityBadge =
+                    '<span class="badge bg-danger">CRITICAL</span>';
+
+                break;
+
+            default:
+
+                severityBadge =
+                    `<span class="badge bg-secondary">${packet.severity}</span>`;
+
+        }
 
         packetDetails.innerHTML = `
 
@@ -114,7 +157,7 @@ async function loadPacket() {
 
                 <th>Severity</th>
 
-                <td>${packet.severity}</td>
+                <td>${severityBadge}</td>
 
             </tr>
 

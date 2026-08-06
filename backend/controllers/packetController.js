@@ -23,7 +23,7 @@ Response bhejna
 
 const packetService = require("../services/packetService");
 
-
+const Packet = require("../models/Packet");
 
 // ==========================================================
 // Get All Packets
@@ -113,13 +113,40 @@ const getPacket = async (req, res) => {
 
 };
 
-module.exports = {
 
-    getPackets,
-    getPacket
+// ==========================================================
+// Delete All Packets
+// ==========================================================
+
+const deleteAllPackets = async (req, res) => {
+
+    try {
+
+        const result = await Packet.deleteMany({});
+
+        res.status(200).json({
+            success: true,
+            message: `${result.deletedCount} packets deleted successfully.`
+        });
+
+    } catch (error) {
+
+        res.status(500).json({
+            success: false,
+            message: error.message
+        });
+
+    }
 
 };
 
+module.exports = {
+
+    getPackets,
+    getPacket,
+    deleteAllPackets
+
+};
 
 
 

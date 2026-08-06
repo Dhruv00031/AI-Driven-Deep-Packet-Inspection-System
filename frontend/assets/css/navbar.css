@@ -232,10 +232,95 @@ gap:20px;
 
 }
 
-
 /* ==========================================================
-   Viva Questions
+   Notification
 ========================================================== */
+
+.notification-wrapper{
+
+    position:relative;
+
+}
+
+.notification{
+
+    cursor:pointer;
+
+    position:relative;
+
+}
+
+.notification-badge{
+
+    position:absolute;
+
+    top:-8px;
+
+    right:-8px;
+
+    background:red;
+
+    color:white;
+
+    border-radius:50%;
+
+    width:18px;
+
+    height:18px;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    font-size:11px;
+
+}
+
+.notification-dropdown{
+
+    position:absolute;
+
+    top:45px;
+
+    right:0;
+
+    width:320px;
+
+    background:#202B3F;
+
+    border-radius:10px;
+
+    padding:15px;
+
+    display:none;
+
+    z-index:999;
+
+    box-shadow:0 0 15px rgba(0,0,0,.4);
+
+}
+
+.notification-item{
+
+    border-bottom:1px solid #444;
+
+    padding:10px 0;
+
+}
+
+.notification-item:last-child{
+
+    border:none;
+
+}
+
+
+
+
+
+
 
 /*
 

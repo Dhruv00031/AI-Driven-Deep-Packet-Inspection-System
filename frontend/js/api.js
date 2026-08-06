@@ -193,7 +193,95 @@ async function getThreats(){
 
 }
 
+// ==========================================================
+// Get Single Packet
+// ==========================================================
 
+async function getPacket(packetId) {
+
+    try {
+
+        const response = await fetch(
+
+            `${BASE_URL}/packets/${packetId}`
+
+        );
+
+        const data = await response.json();
+
+        return data;
+
+    }
+
+    catch (error) {
+
+        console.error(
+
+            "Packet API Error :",
+
+            error
+
+        );
+
+        return null;
+
+    }
+
+}
+
+// ==========================================================
+// Delete API
+// ==========================================================
+
+async function deleteAllPackets() {
+
+    const response = await fetch(`${BASE_URL}/packets`, {
+
+        method: "DELETE"
+
+    });
+
+    return await response.json();
+
+}
+
+
+
+// ==========================================================
+// Get Analytics
+// ==========================================================
+
+async function getAnalytics() {
+
+    try {
+
+        const response = await fetch(
+
+            `${BASE_URL}/analytics`
+
+        );
+
+        const data = await response.json();
+
+        return data;
+
+    }
+
+    catch (error) {
+
+        console.error(
+
+            "Analytics API Error:",
+
+            error
+
+        );
+
+        return null;
+
+    }
+
+}
 
 
 
