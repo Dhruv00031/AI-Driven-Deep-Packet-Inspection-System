@@ -21,7 +21,7 @@ RUN npm install
 
 # Install Python dependencies
 WORKDIR /app
-RUN pip3 install --break-system-packages -r requirements.txt
+RUN pip3 install -r requirements.txt
 
 # Expose backend port
 EXPOSE 5000
