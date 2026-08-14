@@ -34,7 +34,7 @@ Backend localhost par
 Express Server run kar raha hai.
 */
 
-const BASE_URL = "https://ai-dpi-backend.onrender.com/api";
+const BASE_URL = "https://ai-driven-deep-packet-inspection-system.onrender.com/api";
 
 
 // ==========================================================
