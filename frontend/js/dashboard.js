@@ -106,6 +106,54 @@ function getStatusClass(status) {
 
 
 // ==========================================================
+// Connection Error Banner
+//
+// IMPORTANT :
+// Pehle fetch fail hone pe sirf console.log hota tha,
+// screen pe kuch dikhta hi nahi tha (packets 0 reh
+// jaate the bina kisi wajah ke). Ab real error
+// screen ke top pe ek banner me dikhega.
+// ==========================================================
+
+function showConnectionError(message) {
+
+    let banner = document.getElementById("connectionErrorBanner");
+
+    if (!banner) {
+
+        banner = document.createElement("div");
+
+        banner.id = "connectionErrorBanner";
+
+        banner.style.cssText =
+            "position:fixed;top:0;left:0;right:0;z-index:9999;" +
+            "background:#dc3545;color:#fff;padding:10px 16px;" +
+            "font-family:sans-serif;font-size:14px;text-align:center;";
+
+        document.body.prepend(banner);
+
+    }
+
+    banner.textContent = "Backend Connection Issue : " + message;
+
+    banner.style.display = "block";
+
+}
+
+function hideConnectionError() {
+
+    const banner = document.getElementById("connectionErrorBanner");
+
+    if (banner) {
+
+        banner.style.display = "none";
+
+    }
+
+}
+
+
+// ==========================================================
 // Load Dashboard Statistics
 // ==========================================================
 
@@ -117,6 +165,10 @@ async function loadDashboard() {
 
         console.log("Unable to connect to dashboard API.");
 
+        showConnectionError(
+            "Backend se connect nahi ho pa raha (network/CORS/server down)."
+        );
+
         return;
 
     }
@@ -125,9 +177,13 @@ async function loadDashboard() {
 
         console.log(response.message);
 
+        showConnectionError(response.message || "Unknown error");
+
         return;
 
     }
+
+    hideConnectionError();
 
     const dashboard = response.data;
 
@@ -251,6 +307,10 @@ async function loadPackets() {
 
         console.log("Unable to fetch packets.");
 
+        showConnectionError(
+            "Backend se connect nahi ho pa raha (network/CORS/server down)."
+        );
+
         return;
 
     }
@@ -258,6 +318,8 @@ async function loadPackets() {
     if (!response.success) {
 
         console.log(response.message);
+
+        showConnectionError(response.message || "Unknown error");
 
         return;
 
