@@ -80,19 +80,48 @@ async function getDashboardData(){
 
 async function generateSQLAttack() {
 
-    const response = await fetch(
+    try {
 
-        `${BASE_URL}/simulator/sql`,
+        const response = await fetch(
 
-        {
+            `${BASE_URL}/simulator/sql`,
 
-            method: "POST"
+            {
 
-        }
+                method: "POST"
 
-    );
+            }
 
-    return await response.json();
+        );
+
+        return await response.json();
+
+    }
+
+    catch (error) {
+
+        // IMPORTANT :
+        // Pehle yaha try/catch hi nahi tha. Agar fetch
+        // fail hota (network/CORS/server down/cold start
+        // timeout), to error silently "unhandled promise
+        // rejection" ban jaata tha — button pe click karne
+        // se bilkul kuch nahi hota tha, na alert, na error.
+        //
+        // Ab hum ek proper object return karte hain jisse
+        // dashboard.js ka alert(response.message) sahi se
+        // real error dikha sake.
+
+        console.error("SQL Attack API Error :", error);
+
+        return {
+
+            success: false,
+
+            message: "Backend se connect nahi ho pa raha (network/CORS/server down)."
+
+        };
+
+    }
 
 }
 
@@ -104,19 +133,40 @@ async function generateSQLAttack() {
 
 async function generateXSSAttack() {
 
-    const response = await fetch(
+    try {
 
-        `${BASE_URL}/simulator/xss`,
+        const response = await fetch(
 
-        {
+            `${BASE_URL}/simulator/xss`,
 
-            method: "POST"
+            {
 
-        }
+                method: "POST"
 
-    );
+            }
 
-    return await response.json();
+        );
+
+        return await response.json();
+
+    }
+
+    catch (error) {
+
+        // Same reason as generateSQLAttack() —
+        // fetch fail hone pe silent crash na ho.
+
+        console.error("XSS Attack API Error :", error);
+
+        return {
+
+            success: false,
+
+            message: "Backend se connect nahi ho pa raha (network/CORS/server down)."
+
+        };
+
+    }
 
 }
 
