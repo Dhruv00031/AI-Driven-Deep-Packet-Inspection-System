@@ -6,8 +6,11 @@ FROM node:22-bullseye
 
 # Install Python
 RUN apt-get update && \
-    apt-get install -y python3 python3-pip && \
+    apt-get install -y python3 python3-pip libpcap-dev && \
     rm -rf /var/lib/apt/lists/*
+
+# Python output should not be buffered (so Node child_process gets stdout)
+ENV PYTHONUNBUFFERED=1
 
 # Create Working Directory
 WORKDIR /app
@@ -21,7 +24,8 @@ RUN npm install
 
 # Install Python Dependencies
 WORKDIR /app
-RUN pip3 install --no-cache-dir -r requirements.txt
+RUN pip3 install --no-cache-dir --break-system-packages -r requirements.txt || \
+    pip3 install --no-cache-dir -r requirements.txt
 
 # Expose Backend Port
 EXPOSE 5000

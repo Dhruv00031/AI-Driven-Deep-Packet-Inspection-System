@@ -7,9 +7,13 @@ Simulator Controller
 const { exec } = require("child_process");
 const path = require("path");
 
+// Working directory is /app in Docker (two levels up from /app/backend/controllers)
+const PROJECT_ROOT = path.join(__dirname, "../..");
+
 function runSimulator(type, successMessage, res) {
 
-    console.log("Executing Python Simulator...");
+    console.log(`=== runSimulator(${type}) called ===`);
+    console.log(`PROJECT_ROOT: ${PROJECT_ROOT}`);
 
     exec(
 
@@ -17,17 +21,41 @@ function runSimulator(type, successMessage, res) {
 
         {
 
-            cwd: path.join(__dirname, "../..")
+            cwd: PROJECT_ROOT,
+
+            // 30-second timeout — prevents infinite hang on Render free tier
+            timeout: 30000,
+
+            // Capture up to 1MB of output
+            maxBuffer: 1024 * 1024
 
         },
 
         (error, stdout, stderr) => {
 
-            console.log("stdout:", stdout);
-            console.log("stderr:", stderr);
-            console.log("error:", error);
-            
+            console.log("--- Python stdout ---");
+            console.log(stdout);
+            console.log("--- Python stderr ---");
+            console.log(stderr);
+
             if (error) {
+
+                // Distinguish timeout from other errors
+                if (error.killed || error.code === "ETIMEDOUT" || error.signal === "SIGTERM") {
+
+                    console.error("Python simulator timed out after 30s");
+
+                    return res.status(500).json({
+
+                        success: false,
+
+                        message: "Simulator timed out. Check Render logs for Python errors."
+
+                    });
+
+                }
+
+                console.error("Python simulator error:", error.message);
 
                 return res.status(500).json({
 
@@ -41,15 +69,20 @@ function runSimulator(type, successMessage, res) {
 
             if (!stdout.includes("Packet Generated Successfully")) {
 
+                console.error("Python ran but did not print 'Packet Generated Successfully'");
+                console.error("stdout was:", stdout);
+
                 return res.status(500).json({
 
                     success: false,
 
-                    message: stdout
+                    message: stdout || "Simulator did not confirm packet generation."
 
                 });
 
             }
+
+            console.log(`=== ${type} simulation succeeded ===`);
 
             return res.json({
 
@@ -83,6 +116,8 @@ const generateSQLAttack = (req, res) => {
 
 const generateXSSAttack = (req, res) => {
 
+    console.log("=== XSS Button Clicked ===");
+
     runSimulator(
 
         "xss",
@@ -101,4 +136,4 @@ module.exports = {
 
     generateXSSAttack
 
-};
+};

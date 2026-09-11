@@ -3,3 +3,5 @@ services:
     name: ai-dpi-backend
     env: docker
     plan: free
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /
