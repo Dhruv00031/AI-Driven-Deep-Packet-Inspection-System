@@ -10,17 +10,26 @@ Responsibilities :
 
 • Fetch Threat Packets
 • Display Threat Table
+• Search Threats
 • Auto Refresh
 
-Future Scope :
+Search Fields :
 
-• Threat Filters
-• Search
-• Export Report
-• AI Risk Analysis
+• Packet ID
+• Attack
+• Severity
+• Source IP
+• Status
 
 ==========================================================
 */
+
+
+// ==========================================================
+// Global Variables
+// ==========================================================
+
+let threats = [];
 
 
 // ==========================================================
@@ -28,6 +37,13 @@ Future Scope :
 // ==========================================================
 
 const threatTable = document.getElementById("threatTable");
+
+
+// ==========================================================
+// Threat Search
+// ==========================================================
+
+const threatSearch = document.getElementById("threatSearch");
 
 
 // ==========================================================
@@ -100,6 +116,11 @@ async function loadThreats() {
 
     const response = await getThreats();
 
+
+    // ------------------------------------------------------
+    // Backend / Network Error
+    // ------------------------------------------------------
+
     if (response === null) {
 
         console.log("Unable to fetch threats.");
@@ -107,6 +128,11 @@ async function loadThreats() {
         return;
 
     }
+
+
+    // ------------------------------------------------------
+    // API Error
+    // ------------------------------------------------------
 
     if (!response.success) {
 
@@ -116,14 +142,37 @@ async function loadThreats() {
 
     }
 
-    // Purani rows remove karo
+
+    // ------------------------------------------------------
+    // Store Threats
+    // ------------------------------------------------------
+
+    threats = response.data || [];
+
+
+    // ------------------------------------------------------
+    // Apply Search
+    // ------------------------------------------------------
+
+    applyThreatSearch();
+
+}
+
+
+// ==========================================================
+// Render Threats
+// ==========================================================
+
+function renderThreats(threatList) {
+
     threatTable.innerHTML = "";
 
-    // Threat list
-    const threats = response.data;
 
-    // Agar koi threat nahi hai
-    if (threats.length === 0) {
+    // ======================================================
+    // No Threats
+    // ======================================================
+
+    if (threatList.length === 0) {
 
         const row = document.createElement("tr");
 
@@ -144,36 +193,48 @@ async function loadThreats() {
     }
 
 
-    console.log(threats);
-    
-    // Threat rows add karo
-    threats.forEach(packet => {
+    // ======================================================
+    // Threat Rows
+    // ======================================================
+
+    threatList.forEach(packet => {
 
         const row = document.createElement("tr");
 
+
         row.innerHTML = `
 
-            <td>${packet.packet_id}</td>
+            <td>
+                ${packet.packet_id || "-"}
+            </td>
 
-            <td>${packet.attack}</td>
+
+            <td>
+                ${packet.attack || "-"}
+            </td>
+
 
             <td>
 
                 <span class="badge ${getSeverityClass(packet.severity)}">
 
-                    ${packet.severity}
+                    ${packet.severity || "-"}
 
                 </span>
 
             </td>
 
-            <td>${packet.source_ip}</td>
+
+            <td>
+                ${packet.source_ip || "-"}
+            </td>
+
 
             <td>
 
                 <span class="badge ${getStatusClass(packet.status)}">
 
-                    ${packet.status}
+                    ${packet.status || "-"}
 
                 </span>
 
@@ -181,9 +242,115 @@ async function loadThreats() {
 
         `;
 
+
         threatTable.appendChild(row);
 
     });
+
+}
+
+
+// ==========================================================
+// Search Threats
+// ==========================================================
+
+function applyThreatSearch() {
+
+
+    // ------------------------------------------------------
+    // Get Search Keyword
+    // ------------------------------------------------------
+
+    const keyword =
+
+        (threatSearch?.value || "")
+
+            .trim()
+
+            .toLowerCase();
+
+
+    // ------------------------------------------------------
+    // Filter Threats
+    // ------------------------------------------------------
+
+    const filteredThreats = threats.filter(packet => {
+
+
+        const packetId =
+
+            String(packet.packet_id || "")
+
+                .toLowerCase();
+
+
+        const attack =
+
+            String(packet.attack || "")
+
+                .toLowerCase();
+
+
+        const severity =
+
+            String(packet.severity || "")
+
+                .toLowerCase();
+
+
+        const sourceIP =
+
+            String(packet.source_ip || "")
+
+                .toLowerCase();
+
+
+        const status =
+
+            String(packet.status || "")
+
+                .toLowerCase();
+
+
+        return (
+
+            packetId.includes(keyword) ||
+
+            attack.includes(keyword) ||
+
+            severity.includes(keyword) ||
+
+            sourceIP.includes(keyword) ||
+
+            status.includes(keyword)
+
+        );
+
+    });
+
+
+    // ------------------------------------------------------
+    // Display Filtered Results
+    // ------------------------------------------------------
+
+    renderThreats(filteredThreats);
+
+}
+
+
+// ==========================================================
+// Search Event
+// ==========================================================
+
+if (threatSearch) {
+
+    threatSearch.addEventListener(
+
+        "input",
+
+        applyThreatSearch
+
+    );
 
 }
 
@@ -210,48 +377,10 @@ refreshThreats();
 // Auto Refresh
 // ==========================================================
 
-setInterval(refreshThreats, 5000);
+setInterval(
 
+    refreshThreats,
 
+    5000
 
-
-
-
-
-/*
-
-Q1. Why create separate badge functions?
-
-Severity aur Status
-alag-alag values use karte hain.
-
---------------------------------
-
-Q2. Why clear the table first?
-
-Duplicate rows
-avoid karne ke liye.
-
---------------------------------
-
-Q3. Why check threats.length?
-
-Empty database me
-user ko proper message
-dikhana chahiye.
-
---------------------------------
-
-Q4. Why use createElement()?
-
-Professional DOM
-manipulation ke liye.
-
---------------------------------
-
-Q5. Why refresh every 5 seconds?
-
-Real-time monitoring
-experience dene ke liye.
-
-*/
+);

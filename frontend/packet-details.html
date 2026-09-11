@@ -1,103 +1,668 @@
 <!DOCTYPE html>
-
-<!--
-==========================================================
-File Name : packet-details.html
-
-Purpose :
-
-Selected packet ki
-complete information show karna.
-
-Responsibilities :
-
-• Packet Details
-• Status
-• Attack
-• Severity
-
-Future Scope :
-
-• Raw Packet
-• Hex Dump
-• AI Analysis
-
-==========================================================
--->
-
 <html lang="en">
 
 <head>
 
-<meta charset="UTF-8">
+    <meta charset="UTF-8">
 
-<meta
-name="viewport"
-content="width=device-width, initial-scale=1.0">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0">
 
-<title>
+    <title>AI-DPI | Packet Details</title>
 
-Packet Details
 
-</title>
+    <!-- Google Font -->
 
-<link
-href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-rel="stylesheet">
+    <link
+        rel="preconnect"
+        href="https://fonts.googleapis.com">
 
-<link
-rel="stylesheet"
-href="assets/css/main.css">
+    <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin>
 
-<link
-rel="stylesheet"
-href="assets/css/dashboard.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+
+    <!-- Bootstrap Icons -->
+
+    <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+
+    <!-- Packet Details CSS -->
+
+    <link
+        rel="stylesheet"
+        href="assets/css/packet-details.css">
 
 </head>
 
+
 <body>
 
-    <div class="container mt-5">
+<div class="app-shell">
 
-        <!-- ============================================== -->
-        <!-- Header -->
-        <!-- ============================================== -->
 
-        <div class="d-flex justify-content-between align-items-center">
+    <!-- ====================================================== -->
+    <!-- SIDEBAR -->
+    <!-- ====================================================== -->
 
-            <h2>
+    <aside class="sidebar">
 
-                Packet Details
 
-            </h2>
+        <div class="brand-block">
+
+            <img
+                src="assets/images/ai-dpi-logo.png"
+                alt="AI-DPI logo"
+                class="brand-logo">
+
+            <div class="brand-caption">
+                SECURITY CONSOLE
+            </div>
+
+        </div>
+
+
+        <div class="sidebar-label">
+            TELEMETRY MODULES
+        </div>
+
+
+        <nav class="sidebar-nav">
+
 
             <a
+                class="nav-item"
+                href="dashboard.html">
 
-                href="packets.html"
+                <i class="bi bi-grid-1x2-fill"></i>
 
-                class="btn btn-secondary">
-
-                Back to Packets
+                <span>
+                    Dashboard
+                </span>
 
             </a>
 
+
+            <a
+                class="nav-item active"
+                href="packets.html">
+
+                <i class="bi bi-boxes"></i>
+
+                <span>
+                    Packets
+                </span>
+
+            </a>
+
+
+            <a
+                class="nav-item"
+                href="alerts.html">
+
+                <i class="bi bi-shield-exclamation"></i>
+
+                <span>
+                    Threats
+                </span>
+
+            </a>
+
+
+            <a
+                class="nav-item"
+                href="analytics.html">
+
+                <i class="bi bi-bar-chart-line-fill"></i>
+
+                <span>
+                    Analytics
+                </span>
+
+            </a>
+
+
+            <a
+                class="nav-item"
+                href="settings.html">
+
+                <i class="bi bi-gear-fill"></i>
+
+                <span>
+                    Settings
+                </span>
+
+            </a>
+
+        </nav>
+
+
+        <div class="sidebar-footer">
+
+            <div class="engine-card">
+
+                <div class="engine-top">
+
+                    <span class="live-dot"></span>
+
+                    <span>
+                        DPI ENGINE
+                    </span>
+
+                    <strong>
+                        ACTIVE
+                    </strong>
+
+                </div>
+
+
+                <div class="engine-meta">
+                    Real-time inspection enabled
+                </div>
+
+
+                <div class="engine-line">
+
+                    <span></span>
+
+                </div>
+
+            </div>
+
+
+            <div class="version">
+                AI-DPI SECURITY CONSOLE
+            </div>
+
         </div>
 
-        <hr>
+    </aside>
 
-        <!-- ============================================== -->
-        <!-- Packet Details -->
-        <!-- ============================================== -->
 
-        <div id="packetDetails">
 
-            Loading...
+    <!-- ====================================================== -->
+    <!-- MAIN CONTENT -->
+    <!-- ====================================================== -->
 
+    <main class="main-content">
+
+
+        <!-- ================================================== -->
+        <!-- TOPBAR -->
+        <!-- ================================================== -->
+
+        <header class="topbar">
+
+
+            <div class="page-heading">
+
+                <div class="eyebrow">
+
+                    <span class="status-dot"></span>
+
+                    SOC CONSOLE / PACKET INVESTIGATION
+
+                </div>
+
+
+                <h1>
+                    Packet Details
+                </h1>
+
+            </div>
+
+
+            <div class="topbar-actions">
+
+
+                <div class="notification-wrapper">
+
+                    <button
+                        id="notificationBell"
+                        class="icon-btn"
+                        aria-label="Notifications">
+
+                        <i class="bi bi-bell-fill"></i>
+
+                        <span
+                            id="notificationBadge"
+                            class="notification-badge">
+                            0
+                        </span>
+
+                    </button>
+
+
+                    <div
+                        id="notificationDropdown"
+                        class="notification-dropdown">
+
+                        <div class="dropdown-title">
+                            Notifications
+                        </div>
+
+
+                        <div id="notificationList">
+
+                            <p>
+                                No Notifications
+                            </p>
+
+                        </div>
+
+
+                        <button
+                            id="clearNotifications"
+                            class="mark-read">
+
+                            Mark All Read
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <div class="profile">
+
+                    <div class="avatar">
+                        D
+                    </div>
+
+
+                    <div>
+
+                        <strong>
+                            Dhruv
+                        </strong>
+
+                        <span>
+                            Administrator
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </header>
+
+
+
+        <!-- ================================================== -->
+        <!-- INVESTIGATION HEADER -->
+        <!-- ================================================== -->
+
+        <section class="investigation-hero">
+
+
+            <div class="hero-content">
+
+
+                <div class="hero-kicker">
+
+                    <span class="pulse-dot"></span>
+
+                    PACKET INSPECTION RECORD
+
+                </div>
+
+
+                <h2>
+                    Investigate captured
+                    <span>network traffic.</span>
+                </h2>
+
+
+                <p>
+                    Review the packet metadata and AI-DPI inspection
+                    results for the selected network packet.
+                </p>
+
+
+                <div class="hero-actions">
+
+                    <a
+                        href="packets.html"
+                        class="back-btn">
+
+                        <i class="bi bi-arrow-left"></i>
+
+                        Back to Packets
+
+                    </a>
+
+                </div>
+
+            </div>
+
+
+            <div class="inspection-indicator">
+
+
+                <div class="indicator-icon">
+
+                    <i class="bi bi-search"></i>
+
+                </div>
+
+
+                <div>
+
+                    <span>
+                        INSPECTION MODE
+                    </span>
+
+                    <strong>
+                        DETAILED VIEW
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ================================================== -->
+        <!-- PACKET CONTENT -->
+        <!-- ================================================== -->
+
+        <section class="details-layout">
+
+
+            <!-- ============================================== -->
+            <!-- Main Details -->
+            <!-- ============================================== -->
+
+            <article class="panel packet-panel">
+
+
+                <div class="panel-header">
+
+                    <div>
+
+                        <span class="section-kicker">
+                            PACKET METADATA
+                        </span>
+
+                        <h2>
+                            Traffic Information
+                        </h2>
+
+                    </div>
+
+
+                    <div class="live-pill">
+
+                        <span></span>
+
+                        INSPECTED
+
+                    </div>
+
+                </div>
+
+
+                <div
+                    id="packetDetails"
+                    class="packet-details">
+
+                    <div class="loading-state">
+
+                        <div class="loading-icon">
+
+                            <i class="bi bi-arrow-repeat"></i>
+
+                        </div>
+
+                        <strong>
+                            Loading packet...
+                        </strong>
+
+                        <span>
+                            Retrieving inspection record
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </article>
+
+
+
+            <!-- ============================================== -->
+            <!-- Inspection Summary -->
+            <!-- ============================================== -->
+
+            <aside class="panel summary-panel">
+
+
+                <div class="panel-header">
+
+                    <div>
+
+                        <span class="section-kicker">
+                            INSPECTION ENGINE
+                        </span>
+
+                        <h2>
+                            Analysis Status
+                        </h2>
+
+                    </div>
+
+                </div>
+
+
+                <div class="analysis-status">
+
+                    <div class="analysis-icon">
+
+                        <i class="bi bi-shield-check"></i>
+
+                    </div>
+
+
+                    <div>
+
+                        <strong>
+                            DPI Analysis
+                        </strong>
+
+                        <span>
+                            Inspection result available
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="analysis-list">
+
+                    <div>
+
+                        <span>
+                            Packet captured
+                        </span>
+
+                        <strong>
+                            YES
+                        </strong>
+
+                    </div>
+
+
+                    <div>
+
+                        <span>
+                            Deep inspection
+                        </span>
+
+                        <strong>
+                            COMPLETE
+                        </strong>
+
+                    </div>
+
+
+                    <div>
+
+                        <span>
+                            Threat classification
+                        </span>
+
+                        <strong>
+                            AVAILABLE
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </aside>
+
+        </section>
+
+
+
+        <!-- ================================================== -->
+        <!-- FUTURE ANALYSIS -->
+        <!-- ================================================== -->
+
+        <section class="panel future-panel">
+
+
+            <div class="panel-header">
+
+                <div>
+
+                    <span class="section-kicker">
+                        ADVANCED INSPECTION
+                    </span>
+
+                    <h2>
+                        Extended Analysis
+                    </h2>
+
+                </div>
+
+
+                <span class="future-badge">
+                    FUTURE MODULE
+                </span>
+
+            </div>
+
+
+            <div class="future-grid">
+
+
+                <div class="future-item">
+
+                    <div class="future-icon">
+
+                        <i class="bi bi-code-square"></i>
+
+                    </div>
+
+
+                    <div>
+
+                        <strong>
+                            Raw Packet
+                        </strong>
+
+                        <span>
+                            View complete raw packet structure
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="future-item">
+
+                    <div class="future-icon">
+
+                        <i class="bi bi-braces"></i>
+
+                    </div>
+
+
+                    <div>
+
+                        <strong>
+                            Hex Dump
+                        </strong>
+
+                        <span>
+                            Inspect packet data at byte level
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="future-item">
+
+                    <div class="future-icon">
+
+                        <i class="bi bi-stars"></i>
+
+                    </div>
+
+
+                    <div>
+
+                        <strong>
+                            AI Analysis
+                        </strong>
+
+                        <span>
+                            AI-assisted packet risk explanation
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <div
+            id="notificationContainer"
+            class="notification-container">
         </div>
 
-    </div>
+
+    </main>
+
+</div>
+
+
 
 <script src="js/api.js"></script>
+
+<script src="js/notifications.js"></script>
 
 <script src="js/packetDetails.js"></script>
 

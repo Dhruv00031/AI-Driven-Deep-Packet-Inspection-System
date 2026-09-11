@@ -1,28 +1,4 @@
 <!DOCTYPE html>
-
-<!--
-==========================================================
-File Name : alerts.html
-
-Purpose :
-
-Threat Monitoring Page
-
-Responsibilities :
-
-• Show Threat Packets
-• Threat Table
-• Auto Refresh
-
-Future Scope :
-
-• Threat Charts
-• Export Report
-• AI Risk Analysis
-
-==========================================================
--->
-
 <html lang="en">
 
 <head>
@@ -33,17 +9,24 @@ Future Scope :
         name="viewport"
         content="width=device-width, initial-scale=1.0">
 
-    <title>
+    <title>AI-DPI | Threat Monitor</title>
 
-        Threat Monitor
 
-    </title>
-
-    <!-- Bootstrap -->
+    <!-- Google Font -->
 
     <link
-        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="preconnect"
+        href="https://fonts.googleapis.com">
+
+    <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
         rel="stylesheet">
+
 
     <!-- Bootstrap Icons -->
 
@@ -51,147 +34,598 @@ Future Scope :
         rel="stylesheet"
         href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
-    <!-- CSS -->
 
-    <link rel="stylesheet" href="assets/css/main.css">
+    <!-- Threat Monitor CSS -->
 
-    <link rel="stylesheet" href="assets/css/sidebar.css">
-
-    <link rel="stylesheet" href="assets/css/navbar.css">
-
-    <link rel="stylesheet" href="assets/css/dashboard.css">
+    <link
+        rel="stylesheet"
+        href="assets/css/alerts.css">
 
 </head>
 
+
 <body>
 
-<div class="dashboard-wrapper">
+<div class="app-shell">
 
-    <!-- Sidebar -->
 
-    <div id="sidebar">
+    <!-- ====================================================== -->
+    <!-- SIDEBAR -->
+    <!-- ====================================================== -->
 
-        <h3 class="logo">
+    <aside class="sidebar">
 
-            AI DPI
 
-        </h3>
+        <!-- Brand -->
 
-        <ul>
+        <div class="brand-block">
 
-            <li>
+            <img
+                src="assets/images/ai-dpi-logo.png"
+                alt="AI-DPI logo"
+                class="brand-logo">
 
-                <a href="dashboard.html">
-
-                    Dashboard
-
-                </a>
-
-            </li>
-
-            <li>
-
-                <a href="packets.html">
-
-                    Packets
-
-                </a>
-
-            </li>
-
-            <li class="active">
-
-                <a href="alerts.html">
-
-                    Threats
-
-                </a>
-
-            </li>
-
-            <li>
-
-                <a href="analytics.html">
-
-                    Analytics
-
-                </a>
-
-            </li>
-
-            <li>
-
-                <a href="settings.html">
-
-                    Settings
-
-                </a>
-
-            </li>
-
-        </ul>
-
-    </div>
-
-    <!-- Main Content -->
-
-    <main class="main-content">
-
-        <div id="navbar">
-
-            <h2>
-
-                Threat Monitor
-
-            </h2>
+            <div class="brand-caption">
+                SECURITY CONSOLE
+            </div>
 
         </div>
 
-        <section class="table-section">
 
-            <h3>
+        <!-- Navigation Label -->
 
-                Detected Threats
+        <div class="sidebar-label">
+            TELEMETRY MODULES
+        </div>
 
-            </h3>
 
-            <table class="table table-dark table-hover">
+        <!-- Navigation -->
 
-                <thead>
+        <nav class="sidebar-nav">
+
+
+            <a
+                class="nav-item"
+                href="dashboard.html">
+
+                <i class="bi bi-grid-1x2-fill"></i>
+
+                <span>
+                    Dashboard
+                </span>
+
+            </a>
+
+
+            <a
+                class="nav-item"
+                href="packets.html">
+
+                <i class="bi bi-boxes"></i>
+
+                <span>
+                    Packets
+                </span>
+
+            </a>
+
+
+            <a
+                class="nav-item active"
+                href="alerts.html">
+
+                <i class="bi bi-shield-exclamation"></i>
+
+                <span>
+                    Threats
+                </span>
+
+            </a>
+
+
+            <a
+                class="nav-item"
+                href="analytics.html">
+
+                <i class="bi bi-bar-chart-line-fill"></i>
+
+                <span>
+                    Analytics
+                </span>
+
+            </a>
+
+
+            <a
+                class="nav-item"
+                href="settings.html">
+
+                <i class="bi bi-gear-fill"></i>
+
+                <span>
+                    Settings
+                </span>
+
+            </a>
+
+        </nav>
+
+
+        <!-- Sidebar Footer -->
+
+        <div class="sidebar-footer">
+
+            <div class="engine-card">
+
+                <div class="engine-top">
+
+                    <span class="live-dot"></span>
+
+                    <span>
+                        DPI ENGINE
+                    </span>
+
+                    <strong>
+                        ACTIVE
+                    </strong>
+
+                </div>
+
+
+                <div class="engine-meta">
+                    Real-time inspection enabled
+                </div>
+
+
+                <div class="engine-line">
+
+                    <span></span>
+
+                </div>
+
+            </div>
+
+
+            <div class="version">
+                AI-DPI SECURITY CONSOLE
+            </div>
+
+        </div>
+
+    </aside>
+
+
+
+    <!-- ====================================================== -->
+    <!-- MAIN CONTENT -->
+    <!-- ====================================================== -->
+
+    <main class="main-content">
+
+
+        <!-- ================================================== -->
+        <!-- TOPBAR -->
+        <!-- ================================================== -->
+
+        <header class="topbar">
+
+
+            <div class="page-heading">
+
+                <div class="eyebrow">
+
+                    <span class="status-dot"></span>
+
+                    SOC CONSOLE / THREAT MONITORING
+
+                </div>
+
+
+                <h1>
+                    Threat Monitor
+                </h1>
+
+            </div>
+
+
+
+            <div class="topbar-actions">
+
+
+                <!-- Search -->
+
+                <div class="search-wrap">
+
+                    <i class="bi bi-search"></i>
+
+                    <input
+                        type="text"
+                        id="threatSearch"
+                        placeholder="Search Packet ID / Attack / Source IP..."
+                        autocomplete="off">
+
+                </div>
+
+
+                <!-- Notification -->
+
+                <div class="notification-wrapper">
+
+                    <button
+                        id="notificationBell"
+                        class="icon-btn"
+                        aria-label="Notifications">
+
+                        <i class="bi bi-bell-fill"></i>
+
+                        <span
+                            id="notificationBadge"
+                            class="notification-badge">
+                            0
+                        </span>
+
+                    </button>
+
+
+                    <div
+                        id="notificationDropdown"
+                        class="notification-dropdown">
+
+                        <div class="dropdown-title">
+                            Notifications
+                        </div>
+
+
+                        <div id="notificationList">
+
+                            <p>
+                                No Notifications
+                            </p>
+
+                        </div>
+
+
+                        <button
+                            id="clearNotifications"
+                            class="mark-read">
+
+                            Mark All Read
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Profile -->
+
+                <div class="profile">
+
+                    <div class="avatar">
+                        D
+                    </div>
+
+
+                    <div>
+
+                        <strong>
+                            Dhruv
+                        </strong>
+
+                        <span>
+                            Administrator
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </header>
+
+
+
+        <!-- ================================================== -->
+        <!-- THREAT HERO -->
+        <!-- ================================================== -->
+
+        <section class="threat-hero">
+
+
+            <div class="hero-content">
+
+
+                <div class="hero-kicker">
+
+                    <span class="pulse-dot"></span>
+
+                    ACTIVE THREAT MONITORING
+
+                </div>
+
+
+                <h2>
+
+                    Detect threats.
+                    <span>Protect the network.</span>
+
+                </h2>
+
+
+                <p>
+
+                    Monitor malicious traffic identified by the
+                    AI-DPI inspection engine and investigate
+                    detected security events in real time.
+
+                </p>
+
+
+                <div class="hero-status">
+
+                    <i class="bi bi-shield-check"></i>
+
+                    Threat detection pipeline operational
+
+                </div>
+
+            </div>
+
+
+            <div class="threat-indicator">
+
+
+                <div class="indicator-icon">
+
+                    <i class="bi bi-shield-exclamation"></i>
+
+                </div>
+
+
+                <div>
+
+                    <span>
+                        THREAT ENGINE
+                    </span>
+
+                    <strong>
+                        MONITORING
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ================================================== -->
+        <!-- SECURITY STATUS -->
+        <!-- ================================================== -->
+
+        <section class="overview-grid">
+
+
+            <article class="overview-card">
+
+                <div class="overview-icon red">
+
+                    <i class="bi bi-exclamation-triangle-fill"></i>
+
+                </div>
+
+
+                <div>
+
+                    <span>
+                        DETECTION MODE
+                    </span>
+
+                    <strong>
+                        ACTIVE
+                    </strong>
+
+                    <small>
+                        Real-time inspection
+                    </small>
+
+                </div>
+
+            </article>
+
+
+
+            <article class="overview-card">
+
+                <div class="overview-icon orange">
+
+                    <i class="bi bi-radar"></i>
+
+                </div>
+
+
+                <div>
+
+                    <span>
+                        MONITORING
+                    </span>
+
+                    <strong>
+                        LIVE
+                    </strong>
+
+                    <small>
+                        Auto refresh every 5 seconds
+                    </small>
+
+                </div>
+
+            </article>
+
+
+
+            <article class="overview-card">
+
+                <div class="overview-icon green">
+
+                    <i class="bi bi-database-check"></i>
+
+                </div>
+
+
+                <div>
+
+                    <span>
+                        THREAT DATABASE
+                    </span>
+
+                    <strong>
+                        CONNECTED
+                    </strong>
+
+                    <small>
+                        Detection events available
+                    </small>
+
+                </div>
+
+            </article>
+
+
+
+        </section>
+
+
+
+        <!-- ================================================== -->
+        <!-- THREAT TABLE -->
+        <!-- ================================================== -->
+
+        <section class="panel threat-panel">
+
+
+            <div class="panel-header">
+
+
+                <div>
+
+                    <span class="section-kicker">
+                        SECURITY EVENTS
+                    </span>
+
+                    <h2>
+                        Detected Threats
+                    </h2>
+
+                </div>
+
+
+                <div class="monitoring-pill">
+
+                    <span></span>
+
+                    LIVE MONITORING
+
+                </div>
+
+            </div>
+
+
+            <div class="table-meta">
+
+                <div>
+
+                    <i class="bi bi-info-circle"></i>
+
+                    Threats identified by the DPI inspection engine
+
+                </div>
+
+
+                <div>
+
+                    <i class="bi bi-arrow-repeat"></i>
+
+                    Refresh interval: 5 seconds
+
+                </div>
+
+            </div>
+
+
+            <div class="table-wrap">
+
+
+                <table>
+
+
+                    <thead>
 
                     <tr>
 
-                        <th>Packet ID</th>
+                        <th>
+                            PACKET ID
+                        </th>
 
-                        <th>Attack</th>
+                        <th>
+                            ATTACK
+                        </th>
 
-                        <th>Severity</th>
+                        <th>
+                            SEVERITY
+                        </th>
 
-                        <th>Source IP</th>
+                        <th>
+                            SOURCE IP
+                        </th>
 
-                        <th>Status</th>
+                        <th>
+                            STATUS
+                        </th>
 
                     </tr>
 
-                </thead>
+                    </thead>
 
-                <tbody id="threatTable">
 
-                </tbody>
+                    <tbody id="threatTable">
 
-            </table>
+                        <!-- JavaScript inserts threat rows -->
+
+                    </tbody>
+
+                </table>
+
+            </div>
 
         </section>
+
+
+
+        <!-- Notification container -->
+
+        <div
+            id="notificationContainer"
+            class="notification-container">
+        </div>
+
 
     </main>
 
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
-<script src="js/components.js"></script>
+
+<!-- ====================================================== -->
+<!-- SCRIPTS -->
+<!-- ====================================================== -->
 
 <script src="js/api.js"></script>
+
+<script src="js/notifications.js"></script>
 
 <script src="js/alerts.js"></script>
 

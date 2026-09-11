@@ -6,6 +6,12 @@ Purpose :
 
 Single packet load karna.
 
+Responsibilities :
+
+• Get Packet ID from URL
+• Fetch selected packet
+• Display packet information
+• Display status and severity
 ==========================================================
 */
 
@@ -27,7 +33,109 @@ const packetId = params.get("id");
 // HTML Container
 // ==========================================================
 
-const packetDetails = document.getElementById("packetDetails");
+const packetDetails = document.getElementById(
+
+    "packetDetails"
+
+);
+
+
+// ==========================================================
+// Create Severity Badge
+// ==========================================================
+
+function getSeverityBadge(severity) {
+
+    switch (severity) {
+
+        case "LOW":
+
+            return `
+                <span class="detail-badge badge-safe">
+                    LOW
+                </span>
+            `;
+
+        case "MEDIUM":
+
+            return `
+                <span class="detail-badge badge-warning">
+                    MEDIUM
+                </span>
+            `;
+
+        case "HIGH":
+
+            return `
+                <span class="detail-badge badge-high">
+                    HIGH
+                </span>
+            `;
+
+        case "CRITICAL":
+
+            return `
+                <span class="detail-badge badge-critical">
+                    CRITICAL
+                </span>
+            `;
+
+        default:
+
+            return `
+                <span class="detail-badge badge-neutral">
+                    ${severity || "UNKNOWN"}
+                </span>
+            `;
+
+    }
+
+}
+
+
+// ==========================================================
+// Create Status Badge
+// ==========================================================
+
+function getStatusBadge(status) {
+
+    switch (status) {
+
+        case "SAFE":
+
+            return `
+                <span class="detail-badge badge-safe">
+                    SAFE
+                </span>
+            `;
+
+        case "WARNING":
+
+            return `
+                <span class="detail-badge badge-warning">
+                    WARNING
+                </span>
+            `;
+
+        case "MALICIOUS":
+
+            return `
+                <span class="detail-badge badge-critical">
+                    MALICIOUS
+                </span>
+            `;
+
+        default:
+
+            return `
+                <span class="detail-badge badge-neutral">
+                    ${status || "UNKNOWN"}
+                </span>
+            `;
+
+    }
+
+}
 
 
 // ==========================================================
@@ -36,143 +144,272 @@ const packetDetails = document.getElementById("packetDetails");
 
 async function loadPacket() {
 
+    // ------------------------------------------------------
+    // Packet ID Check
+    // ------------------------------------------------------
+
+    if (!packetId) {
+
+        packetDetails.innerHTML = `
+
+            <div class="error-state">
+
+                <div class="error-icon">
+
+                    <i class="bi bi-exclamation-triangle-fill"></i>
+
+                </div>
+
+                <strong>
+                    Packet ID Missing
+                </strong>
+
+                <span>
+                    No packet identifier was provided in the URL.
+                </span>
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
     try {
 
-        const response = await fetch(
+        // --------------------------------------------------
+        // Use same-origin API
+        //
+        // This works with the deployed Render application.
+        // --------------------------------------------------
 
-            `http://localhost:5000/api/packets/${packetId}`
+        const result = await getPacket(packetId);
 
-        );
 
-        const result = await response.json();
+        // --------------------------------------------------
+        // Packet Not Found
+        // --------------------------------------------------
 
         if (!result.success) {
 
-            packetDetails.innerHTML =
+            packetDetails.innerHTML = `
 
-            "<h4>Packet Not Found</h4>";
+                <div class="error-state">
+
+                    <div class="error-icon">
+
+                        <i class="bi bi-search"></i>
+
+                    </div>
+
+                    <strong>
+                        Packet Not Found
+                    </strong>
+
+                    <span>
+                        The requested packet could not be found
+                        in the inspection database.
+                    </span>
+
+                </div>
+
+            `;
 
             return;
 
         }
 
+
+        // --------------------------------------------------
+        // Packet Data
+        // --------------------------------------------------
+
         const packet = result.data;
 
-        // ================================
-        // Severity Badge
-        // ================================
 
-        let severityBadge = "";
-
-        switch (packet.severity) {
-
-            case "LOW":
-
-                severityBadge =
-                    '<span class="badge bg-success">LOW</span>';
-
-                break;
-
-            case "MEDIUM":
-
-                severityBadge =
-                    '<span class="badge bg-warning text-dark">MEDIUM</span>';
-
-                break;
-
-            case "HIGH":
-
-                severityBadge =
-                    '<span class="badge bg-orange text-white">HIGH</span>';
-
-                break;
-
-            case "CRITICAL":
-
-                severityBadge =
-                    '<span class="badge bg-danger">CRITICAL</span>';
-
-                break;
-
-            default:
-
-                severityBadge =
-                    `<span class="badge bg-secondary">${packet.severity}</span>`;
-
-        }
+        // --------------------------------------------------
+        // Display Packet Details
+        // --------------------------------------------------
 
         packetDetails.innerHTML = `
 
-        <table class="table table-dark">
+            <div class="detail-row">
 
-            <tr>
+                <div class="detail-label">
+                    PACKET ID
+                </div>
 
-                <th>Packet ID</th>
+                <div class="detail-value packet-id-value">
+                    ${packet.packet_id || "-"}
+                </div>
 
-                <td>${packet.packet_id}</td>
+            </div>
 
-            </tr>
 
-            <tr>
+            <div class="detail-row">
 
-                <th>Source IP</th>
+                <div class="detail-label">
+                    TIMESTAMP
+                </div>
 
-                <td>${packet.source_ip}</td>
+                <div class="detail-value">
+                    ${packet.timestamp || "-"}
+                </div>
 
-            </tr>
+            </div>
 
-            <tr>
 
-                <th>Destination IP</th>
+            <div class="detail-row">
 
-                <td>${packet.destination_ip}</td>
+                <div class="detail-label">
+                    SOURCE IP
+                </div>
 
-            </tr>
+                <div class="detail-value">
+                    ${packet.source_ip || "-"}
+                </div>
 
-            <tr>
+            </div>
 
-                <th>Protocol</th>
 
-                <td>${packet.protocol}</td>
+            <div class="detail-row">
 
-            </tr>
+                <div class="detail-label">
+                    DESTINATION IP
+                </div>
 
-            <tr>
+                <div class="detail-value">
+                    ${packet.destination_ip || "-"}
+                </div>
 
-                <th>Status</th>
+            </div>
 
-                <td>${packet.status}</td>
 
-            </tr>
+            <div class="detail-row">
 
-            <tr>
+                <div class="detail-label">
+                    PROTOCOL
+                </div>
 
-                <th>Attack</th>
+                <div class="detail-value">
+                    ${packet.protocol || "-"}
+                </div>
 
-                <td>${packet.attack}</td>
+            </div>
 
-            </tr>
 
-            <tr>
+            <div class="detail-row">
 
-                <th>Severity</th>
+                <div class="detail-label">
+                    PACKET LENGTH
+                </div>
 
-                <td>${severityBadge}</td>
+                <div class="detail-value">
+                    ${packet.packet_length || "-"}
+                </div>
 
-            </tr>
+            </div>
 
-        </table>
+
+            <div class="detail-row">
+
+                <div class="detail-label">
+                    STATUS
+                </div>
+
+                <div class="detail-value">
+
+                    ${getStatusBadge(packet.status)}
+
+                </div>
+
+            </div>
+
+
+            <div class="detail-row">
+
+                <div class="detail-label">
+                    ATTACK
+                </div>
+
+                <div class="detail-value">
+                    ${packet.attack || "None"}
+                </div>
+
+            </div>
+
+
+            <div class="detail-row">
+
+                <div class="detail-label">
+                    SEVERITY
+                </div>
+
+                <div class="detail-value">
+
+                    ${getSeverityBadge(packet.severity)}
+
+                </div>
+
+            </div>
+
+
+            <div class="detail-row">
+
+                <div class="detail-label">
+                    MATCHED PATTERN
+                </div>
+
+                <div class="detail-value">
+                    ${packet.matched_pattern || "-"}
+                </div>
+
+            </div>
 
         `;
 
     }
 
-    catch(error){
+    catch (error) {
 
-        console.log(error);
+        console.error(
+            "Packet Details Error:",
+            error
+        );
+
+
+        packetDetails.innerHTML = `
+
+            <div class="error-state">
+
+                <div class="error-icon">
+
+                    <i class="bi bi-cloud-slash"></i>
+
+                </div>
+
+                <strong>
+                    Unable to Load Packet
+                </strong>
+
+                <span>
+                    The packet could not be retrieved from
+                    the AI-DPI backend.
+                </span>
+
+            </div>
+
+        `;
 
     }
 
 }
+
+
+// ==========================================================
+// Initial Load
+// ==========================================================
 
 loadPacket();

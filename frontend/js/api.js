@@ -34,7 +34,11 @@ Backend localhost par
 Express Server run kar raha hai.
 */
 
-const BASE_URL = "/api";
+const BASE_URL =
+    window.location.hostname === "localhost" ||
+    window.location.hostname === "127.0.0.1"
+        ? "http://localhost:5000/api"
+        : "/api";
 
 // ==========================================================
 // Dashboard API

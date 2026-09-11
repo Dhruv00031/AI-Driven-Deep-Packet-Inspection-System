@@ -3,37 +3,65 @@
 File Name : analytics.js
 
 Purpose :
-
-Analytics Dashboard JavaScript
+AI-DPI Analytics Dashboard
 
 Responsibilities :
-
-• Fetch Packet Data
-• Generate Charts
-• Auto Refresh
-
-Future Scope :
-
-• Live Graphs
-• AI Analytics
-• Export Reports
-
+• Fetch packet data
+• Update analytics metrics
+• Generate traffic timeline
+• Generate protocol chart
+• Generate severity chart
+• Generate source/destination tables
+• Generate AI network summary
+• Search analytics data
+• Auto refresh
 ==========================================================
 */
 
-const topDestinationTable = document.getElementById("topDestinationTable");
 
-const topSourceTable = document.getElementById("topSourceTable");
+// ==========================================================
+// DOM ELEMENTS
+// ==========================================================
+
+const topDestinationTable =
+    document.getElementById("topDestinationTable");
+
+const topSourceTable =
+    document.getElementById("topSourceTable");
+
+const totalPacketsElement =
+    document.getElementById("totalPackets");
+
+const threatPacketsElement =
+    document.getElementById("threatPackets");
+
+const dominantProtocolElement =
+    document.getElementById("dominantProtocol");
+
+const activeSourcesElement =
+    document.getElementById("activeSources");
+
+const analyticsSearch =
+    document.getElementById("analyticsSearch");
+
 
 // ==========================================================
 // Chart Variables
 // ==========================================================
 
-let protocolChart;
+let protocolChart = null;
 
-let severityChart;
+let severityChart = null;
 
-let attackChart;
+let trafficTimelineChart = null;
+
+
+// ==========================================================
+// Store All Packets
+// ==========================================================
+
+let allPackets = [];
+
 
 // ==========================================================
 // Load Analytics
@@ -43,27 +71,132 @@ async function loadAnalytics() {
 
     const response = await getPackets();
 
+    // ------------------------------------------------------
+    // API connection failed
+    // ------------------------------------------------------
+
     if (response === null) {
 
         console.log("Unable to fetch analytics.");
 
         return;
-
     }
+
+
+    // ------------------------------------------------------
+    // API returned an error
+    // ------------------------------------------------------
 
     if (!response.success) {
 
         console.log(response.message);
 
         return;
-
     }
 
-    const packets = response.data;
+
+    // ------------------------------------------------------
+    // Store packet data
+    // ------------------------------------------------------
+
+    allPackets = response.data || [];
+
+
+    // ------------------------------------------------------
+    // Apply search
+    // ------------------------------------------------------
+
+    applyAnalyticsSearch();
+}
+
+
+// ==========================================================
+// Apply Analytics Search
+// ==========================================================
+
+function applyAnalyticsSearch() {
+
+    const keyword =
+        (analyticsSearch?.value || "")
+            .trim()
+            .toLowerCase();
+
+
+    // ------------------------------------------------------
+    // No search keyword
+    // ------------------------------------------------------
+
+    if (!keyword) {
+
+        updateAnalytics(allPackets);
+
+        return;
+    }
+
+
+    // ------------------------------------------------------
+    // Filter packets
+    // ------------------------------------------------------
+
+    const filteredPackets = allPackets.filter(packet => {
+
+        const packetId =
+            String(packet.packet_id || "")
+                .toLowerCase();
+
+        const sourceIP =
+            String(packet.source_ip || "")
+                .toLowerCase();
+
+        const destinationIP =
+            String(packet.destination_ip || "")
+                .toLowerCase();
+
+        const protocol =
+            String(packet.protocol || "")
+                .toLowerCase();
+
+        const attack =
+            String(packet.attack || "")
+                .toLowerCase();
+
+        const severity =
+            String(packet.severity || "")
+                .toLowerCase();
+
+        const status =
+            String(packet.status || "")
+                .toLowerCase();
+
+
+        return (
+            packetId.includes(keyword) ||
+            sourceIP.includes(keyword) ||
+            destinationIP.includes(keyword) ||
+            protocol.includes(keyword) ||
+            attack.includes(keyword) ||
+            severity.includes(keyword) ||
+            status.includes(keyword)
+        );
+
+    });
+
+
+    updateAnalytics(filteredPackets);
+}
+
+
+// ==========================================================
+// Update All Analytics
+// ==========================================================
+
+function updateAnalytics(packets) {
+
+    updateMetrics(packets);
+
+    createTrafficTimeline(packets);
 
     createProtocolChart(packets);
-
-    createAttackChart(packets);
 
     createSeverityChart(packets);
 
@@ -72,312 +205,374 @@ async function loadAnalytics() {
     createTopDestinationTable(packets);
 
     generateAISummary(packets);
-
 }
 
-// ==========================================================
-// Attack Distribution Chart
-// ==========================================================
-
-function createAttackChart(packets) {
-
-    let attacks = {
-
-        SAFE: 0,
-
-        SQL: 0,
-
-        XSS: 0
-
-    };
-
-    packets.forEach(packet => {
-
-        if (packet.status === "SAFE") {
-
-            attacks.SAFE++;
-
-        }
-
-        else if (packet.attack === "SQL Injection") {
-
-            attacks.SQL++;
-
-        }
-
-        else if (
-
-            packet.attack ===
-
-            "Cross Site Scripting (XSS)"
-
-        ) {
-
-            attacks.XSS++;
-
-        }
-
-    });
-
-    const ctx = document
-
-        .getElementById("attackChart")
-
-        .getContext("2d");
-
-    if (attackChart) {
-
-        attackChart.destroy();
-
-    }
-
-    attackChart = new Chart(ctx, {
-
-        type: "doughnut",
-
-        data: {
-
-            labels: [
-
-                "Safe",
-
-                "SQL Injection",
-
-                "XSS"
-
-            ],
-
-            datasets: [
-
-                {
-
-                    data: [
-
-                        attacks.SAFE,
-
-                        attacks.SQL,
-
-                        attacks.XSS
-
-                    ]
-
-                }
-
-            ]
-
-        },
-
-        options: {
-
-            responsive: true,
-
-            maintainAspectRatio: false
-
-        }
-
-    });
-
-}
 
 // ==========================================================
-// Top Destination IP Table
+// Analytics Metrics
 // ==========================================================
 
-function createTopDestinationTable(packets) {
-
-    topDestinationTable.innerHTML = "";
-
-    const destinationCount = {};
-
-    packets.forEach(packet => {
-
-        const ip = packet.destination_ip;
-
-        if (destinationCount[ip]) {
-
-            destinationCount[ip]++;
-
-        }
-
-        else {
-
-            destinationCount[ip] = 1;
-
-        }
-
-    });
-
-    const sortedIPs = Object.entries(destinationCount)
-
-        .sort((a, b) => b[1] - a[1])
-
-        .slice(0, 5);
-
-    sortedIPs.forEach(([ip, count]) => {
-
-        const row = document.createElement("tr");
-
-        row.innerHTML = `
-
-            <td>${ip}</td>
-
-            <td>${count}</td>
-
-        `;
-
-        topDestinationTable.appendChild(row);
-
-    });
-
-}
-
-// ==========================================================
-// AI Network Summary
-// ==========================================================
-
-function generateAISummary(packets) {
-
-    const aiSummary = document.getElementById("aiSummary");
+function updateMetrics(packets) {
 
     const totalPackets = packets.length;
 
-    let threatCount = 0;
+
+    // ------------------------------------------------------
+    // Count threats
+    // ------------------------------------------------------
+
+    const threatCount = packets.filter(packet => {
+
+        const status =
+            String(packet.status || "")
+                .toUpperCase();
+
+        return status !== "SAFE";
+
+    }).length;
+
+
+    // ------------------------------------------------------
+    // Count protocols
+    // ------------------------------------------------------
 
     const protocolCount = {};
 
-    const sourceCount = {};
-
     packets.forEach(packet => {
 
-        // Count Threats
-        if (packet.status !== "SAFE") {
+        const protocol =
+            String(packet.protocol || "OTHER")
+                .toUpperCase();
 
-            threatCount++;
-
-        }
-
-        // Count Protocols
-        protocolCount[packet.protocol] =
-            (protocolCount[packet.protocol] || 0) + 1;
-
-        // Count Source IPs
-        sourceCount[packet.source_ip] =
-            (sourceCount[packet.source_ip] || 0) + 1;
+        protocolCount[protocol] =
+            (protocolCount[protocol] || 0) + 1;
 
     });
 
-    // ======================================================
-    // Most Used Protocol
-    // ======================================================
 
-    const topProtocol = Object.keys(protocolCount).reduce(
+    // ------------------------------------------------------
+    // Find dominant protocol
+    // ------------------------------------------------------
 
-        (a, b) => protocolCount[a] > protocolCount[b] ? a : b
+    let dominantProtocol = "—";
 
+    let highestProtocolCount = 0;
+
+    Object.entries(protocolCount).forEach(
+        ([protocol, count]) => {
+
+            if (count > highestProtocolCount) {
+
+                highestProtocolCount = count;
+
+                dominantProtocol = protocol;
+            }
+
+        }
     );
 
-    // ======================================================
-    // Most Active Source
-    // ======================================================
 
-    const topSource = Object.keys(sourceCount).reduce(
+    // ------------------------------------------------------
+    // Count unique source IPs
+    // ------------------------------------------------------
 
-        (a, b) => sourceCount[a] > sourceCount[b] ? a : b
+    const sourceIPs = new Set();
 
-    );
+    packets.forEach(packet => {
 
-    // ======================================================
-    // Network Health
-    // ======================================================
+        if (packet.source_ip) {
 
-    let health = "🟢 SAFE";
+            sourceIPs.add(packet.source_ip);
 
-    let recommendation = "No suspicious activity detected. Continue monitoring.";
+        }
 
-    if (threatCount > 0) {
+    });
 
-        health = "🟡 WARNING";
 
-        recommendation =
-            "Suspicious packets detected. Monitor traffic carefully.";
+    // ------------------------------------------------------
+    // Update UI
+    // ------------------------------------------------------
+
+    if (totalPacketsElement) {
+
+        totalPacketsElement.textContent =
+            totalPackets;
 
     }
 
-    if (threatCount >= 10) {
 
-        health = "🔴 CRITICAL";
+    if (threatPacketsElement) {
 
-        recommendation =
-            "High number of malicious packets detected. Immediate investigation recommended.";
+        threatPacketsElement.textContent =
+            threatCount;
 
     }
 
-    // ======================================================
-    // AI Summary
-    // ======================================================
 
-    aiSummary.innerHTML = `
+    if (dominantProtocolElement) {
 
-        <div class="alert alert-info">
+        dominantProtocolElement.textContent =
+            dominantProtocol;
 
-            <h5>
+    }
 
-                🧠 AI Network Analysis
 
-            </h5>
+    if (activeSourcesElement) {
 
-            <hr>
+        activeSourcesElement.textContent =
+            sourceIPs.size;
 
-            <p>
-
-                <strong>Total Packets :</strong>
-                ${totalPackets}
-
-            </p>
-
-            <p>
-
-                <strong>Threat Packets :</strong>
-                ${threatCount}
-
-            </p>
-
-            <p>
-
-                <strong>Most Used Protocol :</strong>
-                ${topProtocol}
-
-            </p>
-
-            <p>
-
-                <strong>Most Active Source :</strong>
-                ${topSource}
-
-            </p>
-
-            <p>
-
-                <strong>Network Health :</strong>
-                ${health}
-
-            </p>
-
-            <hr>
-
-            <strong>Recommendation</strong>
-
-            <p>
-
-                ${recommendation}
-
-            </p>
-
-        </div>
-
-    `;
+    }
 
 }
+
+
+// ==========================================================
+// Traffic Timeline
+// ==========================================================
+
+function createTrafficTimeline(packets) {
+
+    const canvas =
+        document.getElementById("trafficTimeline");
+
+    const emptyMessage =
+        document.getElementById("timelineEmpty");
+
+
+    if (!canvas) {
+        return;
+    }
+
+
+    // ------------------------------------------------------
+    // Destroy previous chart
+    // ------------------------------------------------------
+
+    if (trafficTimelineChart) {
+
+        trafficTimelineChart.destroy();
+
+        trafficTimelineChart = null;
+    }
+
+
+    // ------------------------------------------------------
+    // Empty state
+    // ------------------------------------------------------
+
+    if (packets.length === 0) {
+
+        canvas.style.display = "none";
+
+        if (emptyMessage) {
+
+            emptyMessage.style.display = "flex";
+
+        }
+
+        return;
+    }
+
+
+    canvas.style.display = "block";
+
+    if (emptyMessage) {
+
+        emptyMessage.style.display = "none";
+
+    }
+
+
+    // ------------------------------------------------------
+    // Group packets by timestamp
+    // ------------------------------------------------------
+
+    const timelineCount = {};
+
+
+    packets.forEach(packet => {
+
+        if (!packet.timestamp) {
+            return;
+        }
+
+
+        // Example:
+        // 2026-09-08 12:34:56
+        //
+        // We keep only HH:MM
+
+        const timestamp =
+            String(packet.timestamp);
+
+        const timePart =
+            timestamp.includes(" ")
+                ? timestamp.split(" ")[1]
+                : timestamp;
+
+
+        const minute =
+            timePart.substring(0, 5);
+
+
+        if (!minute) {
+            return;
+        }
+
+
+        timelineCount[minute] =
+            (timelineCount[minute] || 0) + 1;
+
+    });
+
+
+    const sortedTimeline =
+        Object.entries(timelineCount)
+            .sort((a, b) =>
+                a[0].localeCompare(b[0])
+            );
+
+
+    const labels =
+        sortedTimeline.map(item => item[0]);
+
+    const values =
+        sortedTimeline.map(item => item[1]);
+
+
+    // ------------------------------------------------------
+    // Chart
+    // ------------------------------------------------------
+
+    const ctx =
+        canvas.getContext("2d");
+
+
+    trafficTimelineChart =
+        new Chart(ctx, {
+
+            type: "line",
+
+            data: {
+
+                labels: labels,
+
+                datasets: [{
+
+                    label: "Packets",
+
+                    data: values,
+
+                    borderColor: "#4de3f2",
+
+                    backgroundColor:
+                        "rgba(77, 227, 242, 0.08)",
+
+                    borderWidth: 2,
+
+                    fill: true,
+
+                    tension: 0.35,
+
+                    pointRadius: 2,
+
+                    pointHoverRadius: 5
+
+                }]
+
+            },
+
+
+            options: {
+
+                responsive: true,
+
+                maintainAspectRatio: false,
+
+                interaction: {
+
+                    intersect: false,
+
+                    mode: "index"
+
+                },
+
+
+                plugins: {
+
+                    legend: {
+
+                        display: false
+
+                    }
+
+                },
+
+
+                scales: {
+
+                    x: {
+
+                        grid: {
+
+                            color:
+                                "rgba(90, 120, 145, 0.08)"
+
+                        },
+
+                        ticks: {
+
+                            color: "#60788e",
+
+                            font: {
+
+                                size: 9
+
+                            },
+
+                            maxTicksLimit: 10
+
+                        }
+
+                    },
+
+
+                    y: {
+
+                        beginAtZero: true,
+
+                        ticks: {
+
+                            precision: 0,
+
+                            color: "#60788e",
+
+                            font: {
+
+                                size: 9
+
+                            }
+
+                        },
+
+                        grid: {
+
+                            color:
+                                "rgba(90, 120, 145, 0.08)"
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+        });
+
+}
+
 
 // ==========================================================
 // Protocol Chart
@@ -385,22 +580,40 @@ function generateAISummary(packets) {
 
 function createProtocolChart(packets) {
 
-    let protocolCount = {
+    const canvas =
+        document.getElementById("protocolChart");
 
-        TCP:0,
 
-        UDP:0,
+    if (!canvas) {
+        return;
+    }
 
-        ICMP:0,
 
-        OTHER:0
+    // ------------------------------------------------------
+    // Count protocols
+    // ------------------------------------------------------
+
+    const protocolCount = {
+
+        TCP: 0,
+
+        UDP: 0,
+
+        ICMP: 0,
+
+        OTHER: 0
 
     };
 
 
-    packets.forEach(packet=>{
+    packets.forEach(packet => {
 
-        switch(packet.protocol){
+        const protocol =
+            String(packet.protocol || "")
+                .toUpperCase();
+
+
+        switch (protocol) {
 
             case "TCP":
 
@@ -408,17 +621,20 @@ function createProtocolChart(packets) {
 
                 break;
 
+
             case "UDP":
 
                 protocolCount.UDP++;
 
                 break;
 
+
             case "ICMP":
 
                 protocolCount.ICMP++;
 
                 break;
+
 
             default:
 
@@ -429,73 +645,107 @@ function createProtocolChart(packets) {
     });
 
 
-    const ctx = document
-        .getElementById("protocolChart")
-        .getContext("2d");
+    // ------------------------------------------------------
+    // Destroy previous chart
+    // ------------------------------------------------------
 
-
-    if(protocolChart){
+    if (protocolChart) {
 
         protocolChart.destroy();
 
+        protocolChart = null;
     }
 
 
-    protocolChart = new Chart(ctx,{
+    // ------------------------------------------------------
+    // Create chart
+    // ------------------------------------------------------
 
-        type:"pie",
+    const ctx =
+        canvas.getContext("2d");
 
-        data:{
 
-            labels:[
+    protocolChart =
+        new Chart(ctx, {
 
-                "TCP",
+            type: "doughnut",
 
-                "UDP",
+            data: {
 
-                "ICMP",
+                labels: [
 
-                "OTHER"
+                    "TCP",
 
-            ],
+                    "UDP",
 
-            datasets:[{
+                    "ICMP",
 
-                data:[
+                    "OTHER"
 
-                    protocolCount.TCP,
+                ],
 
-                    protocolCount.UDP,
 
-                    protocolCount.ICMP,
+                datasets: [{
 
-                    protocolCount.OTHER
+                    data: [
 
-                ]
+                        protocolCount.TCP,
 
-            }]
+                        protocolCount.UDP,
 
-        },
+                        protocolCount.ICMP,
 
-        options: {
+                        protocolCount.OTHER
 
-            responsive: true,
+                    ],
 
-            maintainAspectRatio: false,
+                    backgroundColor: [
 
-            plugins: {
+                        "#4de3f2",
 
-                legend: {
+                        "#45e6a3",
 
-                    position: "top",
+                        "#f4c95d",
 
-                    labels: {
+                        "#60788e"
 
-                        boxWidth: 15,
+                    ],
 
-                        font: {
+                    borderColor: "#0b1727",
 
-                            size: 12
+                    borderWidth: 3
+
+                }]
+
+            },
+
+
+            options: {
+
+                responsive: true,
+
+                maintainAspectRatio: false,
+
+
+                plugins: {
+
+                    legend: {
+
+                        position: "bottom",
+
+                        labels: {
+
+                            color: "#8ea4ba",
+
+                            boxWidth: 12,
+
+                            padding: 15,
+
+                            font: {
+
+                                size: 9
+
+                            }
 
                         }
 
@@ -505,36 +755,51 @@ function createProtocolChart(packets) {
 
             }
 
-        }
-
-    });
+        });
 
 }
-
 
 
 // ==========================================================
 // Severity Chart
 // ==========================================================
 
-function createSeverityChart(packets){
+function createSeverityChart(packets) {
 
-    let severity={
+    const canvas =
+        document.getElementById("severityChart");
 
-        LOW:0,
 
-        MEDIUM:0,
+    if (!canvas) {
+        return;
+    }
 
-        HIGH:0,
 
-        CRITICAL:0
+    // ------------------------------------------------------
+    // Count severity levels
+    // ------------------------------------------------------
+
+    const severity = {
+
+        LOW: 0,
+
+        MEDIUM: 0,
+
+        HIGH: 0,
+
+        CRITICAL: 0
 
     };
 
 
-    packets.forEach(packet=>{
+    packets.forEach(packet => {
 
-        switch(packet.severity){
+        const level =
+            String(packet.severity || "")
+                .toUpperCase();
+
+
+        switch (level) {
 
             case "LOW":
 
@@ -542,17 +807,20 @@ function createSeverityChart(packets){
 
                 break;
 
+
             case "MEDIUM":
 
                 severity.MEDIUM++;
 
                 break;
 
+
             case "HIGH":
 
                 severity.HIGH++;
 
                 break;
+
 
             case "CRITICAL":
 
@@ -565,75 +833,148 @@ function createSeverityChart(packets){
     });
 
 
-    const ctx=document
-        .getElementById("severityChart")
-        .getContext("2d");
+    // ------------------------------------------------------
+    // Destroy previous chart
+    // ------------------------------------------------------
 
-
-    if(severityChart){
+    if (severityChart) {
 
         severityChart.destroy();
 
+        severityChart = null;
     }
 
 
-    severityChart=new Chart(ctx,{
+    // ------------------------------------------------------
+    // Create chart
+    // ------------------------------------------------------
 
-        type:"bar",
+    const ctx =
+        canvas.getContext("2d");
 
-        data:{
 
-            labels:[
+    severityChart =
+        new Chart(ctx, {
 
-                "LOW",
+            type: "bar",
 
-                "MEDIUM",
+            data: {
 
-                "HIGH",
+                labels: [
 
-                "CRITICAL"
+                    "LOW",
 
-            ],
+                    "MEDIUM",
 
-            datasets:[{
+                    "HIGH",
 
-                label:"Threat Severity",
+                    "CRITICAL"
 
-                data:[
+                ],
 
-                    severity.LOW,
 
-                    severity.MEDIUM,
+                datasets: [{
 
-                    severity.HIGH,
+                    label: "Threat Severity",
 
-                    severity.CRITICAL
+                    data: [
 
-                ]
+                        severity.LOW,
 
-            }]
+                        severity.MEDIUM,
 
-        },
+                        severity.HIGH,
 
-        options: {
+                        severity.CRITICAL
 
-            responsive: true,
+                    ],
 
-            maintainAspectRatio: false,
+                    backgroundColor: [
 
-            plugins: {
+                        "#45e6a3",
 
-                legend: {
+                        "#f4c95d",
 
-                    position: "top",
+                        "#fd9b4d",
 
-                    labels: {
+                        "#ff667d"
 
-                        boxWidth: 15,
+                    ],
 
-                        font: {
+                    borderRadius: 4,
 
-                            size: 12
+                    borderWidth: 0
+
+                }]
+
+            },
+
+
+            options: {
+
+                responsive: true,
+
+                maintainAspectRatio: false,
+
+
+                plugins: {
+
+                    legend: {
+
+                        display: false
+
+                    }
+
+                },
+
+
+                scales: {
+
+                    x: {
+
+                        grid: {
+
+                            display: false
+
+                        },
+
+                        ticks: {
+
+                            color: "#71889e",
+
+                            font: {
+
+                                size: 9
+
+                            }
+
+                        }
+
+                    },
+
+
+                    y: {
+
+                        beginAtZero: true,
+
+                        ticks: {
+
+                            precision: 0,
+
+                            color: "#60788e",
+
+                            font: {
+
+                                size: 9
+
+                            }
+
+                        },
+
+                        grid: {
+
+                            color:
+                                "rgba(90, 120, 145, 0.08)"
 
                         }
 
@@ -641,36 +982,471 @@ function createSeverityChart(packets){
 
                 }
 
-            },
-
-            layout: {
-
-                padding: 10
-
-            },
-
-            scales: {
-
-                y: {
-
-                    beginAtZero: true,
-
-                    ticks: {
-
-                        precision: 0
-
-                    }
-
-                }
-
             }
 
-        }
+        });
+
+}
+
+
+// ==========================================================
+// Top Source IP Table
+// ==========================================================
+
+function createTopSourceTable(packets) {
+
+    if (!topSourceTable) {
+        return;
+    }
+
+
+    topSourceTable.innerHTML = "";
+
+
+    const sourceCount = {};
+
+
+    packets.forEach(packet => {
+
+        const ip =
+            packet.source_ip || "Unknown";
+
+
+        sourceCount[ip] =
+            (sourceCount[ip] || 0) + 1;
+
+    });
+
+
+    const sortedIPs =
+        Object.entries(sourceCount)
+            .sort((a, b) => b[1] - a[1])
+            .slice(0, 5);
+
+
+    if (sortedIPs.length === 0) {
+
+        topSourceTable.innerHTML = `
+            <tr>
+                <td colspan="2">
+                    No source data available
+                </td>
+            </tr>
+        `;
+
+        return;
+    }
+
+
+    sortedIPs.forEach(([ip, count]) => {
+
+        const row =
+            document.createElement("tr");
+
+
+        row.innerHTML = `
+
+            <td>
+                ${ip}
+            </td>
+
+            <td>
+                ${count}
+            </td>
+
+        `;
+
+
+        topSourceTable.appendChild(row);
 
     });
 
 }
 
+
+// ==========================================================
+// Top Destination IP Table
+// ==========================================================
+
+function createTopDestinationTable(packets) {
+
+    if (!topDestinationTable) {
+        return;
+    }
+
+
+    topDestinationTable.innerHTML = "";
+
+
+    const destinationCount = {};
+
+
+    packets.forEach(packet => {
+
+        const ip =
+            packet.destination_ip || "Unknown";
+
+
+        destinationCount[ip] =
+            (destinationCount[ip] || 0) + 1;
+
+    });
+
+
+    const sortedIPs =
+        Object.entries(destinationCount)
+            .sort((a, b) => b[1] - a[1])
+            .slice(0, 5);
+
+
+    if (sortedIPs.length === 0) {
+
+        topDestinationTable.innerHTML = `
+            <tr>
+                <td colspan="2">
+                    No destination data available
+                </td>
+            </tr>
+        `;
+
+        return;
+    }
+
+
+    sortedIPs.forEach(([ip, count]) => {
+
+        const row =
+            document.createElement("tr");
+
+
+        row.innerHTML = `
+
+            <td>
+                ${ip}
+            </td>
+
+            <td>
+                ${count}
+            </td>
+
+        `;
+
+
+        topDestinationTable.appendChild(row);
+
+    });
+
+}
+
+
+// ==========================================================
+// AI Network Summary
+// ==========================================================
+
+function generateAISummary(packets) {
+
+    const aiSummary =
+        document.getElementById("aiSummary");
+
+
+    if (!aiSummary) {
+        return;
+    }
+
+
+    // ------------------------------------------------------
+    // Empty state
+    // ------------------------------------------------------
+
+    if (packets.length === 0) {
+
+        aiSummary.innerHTML = `
+
+            <div class="summary-loading">
+
+                No packet telemetry available
+                for analysis.
+
+            </div>
+
+        `;
+
+        return;
+    }
+
+
+    // ------------------------------------------------------
+    // Basic counts
+    // ------------------------------------------------------
+
+    const totalPackets =
+        packets.length;
+
+
+    let threatCount = 0;
+
+
+    const protocolCount = {};
+
+    const sourceCount = {};
+
+
+    packets.forEach(packet => {
+
+        // --------------------------------------------------
+        // Threat count
+        // --------------------------------------------------
+
+        const status =
+            String(packet.status || "")
+                .toUpperCase();
+
+
+        if (status !== "SAFE") {
+
+            threatCount++;
+
+        }
+
+
+        // --------------------------------------------------
+        // Protocol count
+        // --------------------------------------------------
+
+        const protocol =
+            String(packet.protocol || "OTHER")
+                .toUpperCase();
+
+
+        protocolCount[protocol] =
+            (protocolCount[protocol] || 0) + 1;
+
+
+        // --------------------------------------------------
+        // Source count
+        // --------------------------------------------------
+
+        const source =
+            packet.source_ip || "Unknown";
+
+
+        sourceCount[source] =
+            (sourceCount[source] || 0) + 1;
+
+    });
+
+
+    // ------------------------------------------------------
+    // Most used protocol
+    // ------------------------------------------------------
+
+    let topProtocol = "—";
+
+    let topProtocolCount = 0;
+
+
+    Object.entries(protocolCount)
+        .forEach(([protocol, count]) => {
+
+            if (count > topProtocolCount) {
+
+                topProtocol = protocol;
+
+                topProtocolCount = count;
+
+            }
+
+        });
+
+
+    // ------------------------------------------------------
+    // Most active source
+    // ------------------------------------------------------
+
+    let topSource = "—";
+
+    let topSourceCount = 0;
+
+
+    Object.entries(sourceCount)
+        .forEach(([source, count]) => {
+
+            if (count > topSourceCount) {
+
+                topSource = source;
+
+                topSourceCount = count;
+
+            }
+
+        });
+
+
+    // ------------------------------------------------------
+    // Network health
+    // ------------------------------------------------------
+
+    let health = "SAFE";
+
+    let healthClass = "safe";
+
+    let recommendation =
+        "No suspicious activity detected. Continue monitoring network traffic.";
+
+
+    if (threatCount > 0) {
+
+        health = "WARNING";
+
+        healthClass = "warning";
+
+        recommendation =
+            "Suspicious packets detected. Monitor network traffic carefully.";
+
+    }
+
+
+    if (threatCount >= 10) {
+
+        health = "CRITICAL";
+
+        healthClass = "critical";
+
+        recommendation =
+            "High number of malicious packets detected. Immediate investigation is recommended.";
+
+    }
+
+
+    // ------------------------------------------------------
+    // Render AI summary
+    // ------------------------------------------------------
+
+    aiSummary.innerHTML = `
+
+        <div class="ai-summary-content">
+
+            <div class="summary-main">
+
+                <div class="summary-title">
+
+                    <span class="summary-ai-icon">
+                        ✦
+                    </span>
+
+                    <span>
+                        AI Network Analysis
+                    </span>
+
+                </div>
+
+
+                <p>
+                    AI-DPI analyzed
+                    <strong>${totalPackets}</strong>
+                    captured packets and identified
+                    <strong>${threatCount}</strong>
+                    threat packets.
+                </p>
+
+            </div>
+
+
+            <div class="summary-stats">
+
+                <div class="summary-stat">
+
+                    <span>
+                        PACKETS
+                    </span>
+
+                    <strong>
+                        ${totalPackets}
+                    </strong>
+
+                </div>
+
+
+                <div class="summary-stat">
+
+                    <span>
+                        THREATS
+                    </span>
+
+                    <strong>
+                        ${threatCount}
+                    </strong>
+
+                </div>
+
+
+                <div class="summary-stat">
+
+                    <span>
+                        PROTOCOL
+                    </span>
+
+                    <strong>
+                        ${topProtocol}
+                    </strong>
+
+                </div>
+
+
+                <div class="summary-stat">
+
+                    <span>
+                        ACTIVE SOURCE
+                    </span>
+
+                    <strong>
+                        ${topSource}
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <div class="summary-health ${healthClass}">
+
+                <div>
+
+                    <span class="health-label">
+                        NETWORK HEALTH
+                    </span>
+
+                    <strong>
+                        ${health}
+                    </strong>
+
+                </div>
+
+                <p>
+                    ${recommendation}
+                </p>
+
+            </div>
+
+        </div>
+
+    `;
+
+}
+
+
+// ==========================================================
+// Search Event
+// ==========================================================
+
+if (analyticsSearch) {
+
+    analyticsSearch.addEventListener(
+        "input",
+        applyAnalyticsSearch
+    );
+
+}
 
 
 // ==========================================================
@@ -680,114 +1456,8 @@ function createSeverityChart(packets){
 loadAnalytics();
 
 
-
 // ==========================================================
 // Auto Refresh
 // ==========================================================
 
-setInterval(loadAnalytics,5000);
-
-
-
-// ==========================================================
-// Top Source IP Table
-// ==========================================================
-
-function createTopSourceTable(packets) {
-
-    topSourceTable.innerHTML = "";
-
-    const sourceCount = {};
-
-    packets.forEach(packet => {
-
-        const ip = packet.source_ip;
-
-        if (sourceCount[ip]) {
-
-            sourceCount[ip]++;
-
-        }
-
-        else {
-
-            sourceCount[ip] = 1;
-
-        }
-
-    });
-
-    const sortedIPs = Object.entries(sourceCount)
-
-        .sort((a, b) => b[1] - a[1])
-
-        .slice(0, 5);
-
-    sortedIPs.forEach(([ip, count]) => {
-
-        const row = document.createElement("tr");
-
-        row.innerHTML = `
-
-            <td>${ip}</td>
-
-            <td>${count}</td>
-
-        `;
-
-        topSourceTable.appendChild(row);
-
-    });
-
-}
-
-
-
-
-
-
-/*
-
-Q1 Why destroy chart first?
-
-Purana chart remove
-karna zaruri hota hai,
-warna multiple charts
-ek dusre ke upar
-ban jayenge.
-
-
---------------------------------
-
-Q2 Why reuse getPackets()?
-
-Backend me already
-packet API bani hui hai.
-
-Extra API ki
-zarurat nahi.
-
---------------------------------
-
-Q3 Why use switch?
-
-Protocol aur Severity
-count karna easy ho jata hai.
-
---------------------------------
-
-Q4 Why auto refresh?
-
-Live monitoring
-experience ke liye.
-
---------------------------------
-
-Q5 Why create two functions?
-
-Single Responsibility Principle.
-
-Har function
-ek hi kaam kare.
-
-*/
+setInterval(loadAnalytics, 5000);
