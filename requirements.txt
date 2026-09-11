@@ -1,4 +1,4 @@
-pymongo[srv]
+pymongo
 python-dotenv
 scapy
 dnspython
