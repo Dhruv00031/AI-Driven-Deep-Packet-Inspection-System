@@ -27,6 +27,9 @@ WORKDIR /app
 RUN pip3 install --no-cache-dir --break-system-packages -r requirements.txt || \
     pip3 install --no-cache-dir -r requirements.txt
 
+# Verify the simulator and its runtime dependencies are importable at build time
+RUN python3 -c "import pymongo, dns, dotenv; import simulator.run_simulator; import packet_engine.dpi_engine"
+
 # Expose Backend Port
 EXPOSE 5000
 

@@ -4,136 +4,89 @@ Simulator Controller
 ==========================================================
 */
 
-const { exec } = require("child_process");
+const { execFile } = require("child_process");
 const path = require("path");
 
-// Working directory is /app in Docker (two levels up from /app/backend/controllers)
-const PROJECT_ROOT = path.join(__dirname, "../..");
+const PROJECT_ROOT = path.resolve(__dirname, "../..");
+const PYTHON_BIN = process.env.PYTHON_BIN || "python3";
 
 function runSimulator(type, successMessage, res) {
+    if (!['sql', 'xss'].includes(type)) {
+        return res.status(400).json({
+            success: false,
+            message: "Invalid simulator type"
+        });
+    }
 
-    console.log(`=== runSimulator(${type}) called ===`);
-    console.log(`PROJECT_ROOT: ${PROJECT_ROOT}`);
+    console.log(`[Simulator] Starting ${type} simulation`);
+    console.log(`[Simulator] cwd=${PROJECT_ROOT}, python=${PYTHON_BIN}`);
 
-    exec(
-
-        `python3 -m simulator.run_simulator ${type}`,
-
+    // execFile avoids shell parsing and executes Python directly. The child
+    // inherits Render's environment, including MONGO_URI.
+    execFile(
+        PYTHON_BIN,
+        ["-m", "simulator.run_simulator", type],
         {
-
             cwd: PROJECT_ROOT,
-
-            // 30-second timeout — prevents infinite hang on Render free tier
-            timeout: 30000,
-
-            // Capture up to 1MB of output
+            env: process.env,
+            timeout: 25000,
             maxBuffer: 1024 * 1024
-
         },
-
         (error, stdout, stderr) => {
+            const out = (stdout || "").trim();
+            const err = (stderr || "").trim();
 
-            console.log("--- Python stdout ---");
-            console.log(stdout);
-            console.log("--- Python stderr ---");
-            console.log(stderr);
+            if (out) console.log(`[Simulator:${type}] stdout:\n${out}`);
+            if (err) console.error(`[Simulator:${type}] stderr:\n${err}`);
 
             if (error) {
+                console.error(`[Simulator:${type}] process error:`, {
+                    code: error.code,
+                    signal: error.signal,
+                    killed: error.killed,
+                    message: error.message
+                });
 
-                // Distinguish timeout from other errors
-                if (error.killed || error.code === "ETIMEDOUT" || error.signal === "SIGTERM") {
-
-                    console.error("Python simulator timed out after 30s");
-
-                    return res.status(500).json({
-
+                if (error.killed || error.code === "ETIMEDOUT") {
+                    return res.status(504).json({
                         success: false,
-
-                        message: "Simulator timed out. Check Render logs for Python errors."
-
+                        message: "Attack simulator timed out before completion."
                     });
-
                 }
 
-                console.error("Python simulator error:", error.message);
-
                 return res.status(500).json({
-
                     success: false,
-
-                    message: stderr || stdout || error.message
-
+                    message: err || out || "Attack simulator failed. Check server logs."
                 });
-
             }
 
-            if (!stdout.includes("Packet Generated Successfully")) {
-
-                console.error("Python ran but did not print 'Packet Generated Successfully'");
-                console.error("stdout was:", stdout);
-
+            // run_simulator.py exits 0 only after DPI inspection and MongoDB
+            // insertion succeed. Keep the marker check as an extra safeguard.
+            if (!out.includes("Packet Generated Successfully")) {
+                console.error(`[Simulator:${type}] Python exited without success marker`);
                 return res.status(500).json({
-
                     success: false,
-
-                    message: stdout || "Simulator did not confirm packet generation."
-
+                    message: out || "Simulator completed without confirming packet generation."
                 });
-
             }
 
-            console.log(`=== ${type} simulation succeeded ===`);
-
-            return res.json({
-
+            return res.status(200).json({
                 success: true,
-
                 message: successMessage
-
             });
-
         }
-
     );
-
 }
 
 const generateSQLAttack = (req, res) => {
-
-    console.log("=== SQL Button Clicked ===");
-
-    runSimulator(
-
-        "sql",
-
-        "SQL Injection Generated",
-
-        res
-
-    );
-
+    runSimulator("sql", "SQL Injection Generated", res);
 };
 
 const generateXSSAttack = (req, res) => {
-
-    console.log("=== XSS Button Clicked ===");
-
-    runSimulator(
-
-        "xss",
-
-        "XSS Attack Generated",
-
-        res
-
-    );
-
+    runSimulator("xss", "XSS Attack Generated", res);
 };
 
 module.exports = {
-
     generateSQLAttack,
-
     generateXSSAttack
-
-};
+};
