@@ -31,6 +31,8 @@ Future Scope :
 // Express Framework
 const express = require("express");
 
+const path = require("path");
+
 // CORS
 // Frontend ko backend access dene ke liye
 const cors = require("cors");
@@ -152,19 +154,18 @@ module.exports = {
 };
 
 // ==========================================================
-// Home Route
+// Serve Frontend
 // ==========================================================
 
-// Sirf testing ke liye.
+// Frontend folder ko Express ke through serve karega.
+const frontendPath = path.join(__dirname, "../frontend");
+
+app.use(express.static(frontendPath));
+
+// Root URL par frontend ka index.html open hoga.
 app.get("/", (req, res) => {
 
-    res.status(200).json({
-
-        success: true,
-
-        message: "AI Driven DPI Backend Running Successfully"
-
-    });
+    res.sendFile(path.join(frontendPath, "index.html"));
 
 });
 
