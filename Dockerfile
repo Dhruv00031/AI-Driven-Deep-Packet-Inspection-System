@@ -2,7 +2,7 @@
 # AI DPI System - Dockerfile
 # ==========================================
 
-FROM node:22-bullseye
+FROM node:22-bookworm
 
 # Install Python
 RUN apt-get update && \
