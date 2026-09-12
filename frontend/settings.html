@@ -5,239 +5,1197 @@
 
     <meta charset="UTF-8">
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0">
 
-    <title>Settings</title>
+    <title>AI-DPI | Settings</title>
 
-    <!-- Favicon   -->
-    <link rel="icon" type="image/png" href="assets/images/ai-dpi-logo.png">
+    <!-- =====================================================
+         FAVICON
+         ===================================================== -->
 
     <link
-        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-        rel="stylesheet">
+        rel="icon"
+        type="image/png"
+        href="assets/images/ai-dpi-logo.png">
+
+
+    <!-- =====================================================
+         SETTINGS PAGE CSS
+         ===================================================== -->
 
     <link
         rel="stylesheet"
-        href="assets/css/style.css">
+        href="assets/css/settings.css">
 
 </head>
 
-<body class="bg-light">
 
-<div class="container mt-4">
+<body>
 
-    <!-- ============================================== -->
-    <!-- Header -->
-    <!-- ============================================== -->
-
-    <div class="d-flex justify-content-between align-items-center mb-4">
-
-        <h2>System Settings</h2>
-
-        <a
-            href="dashboard.html"
-            class="btn btn-secondary">
-
-            Dashboard
-
-        </a>
-
-    </div>
+<div class="app-shell">
 
 
-    <!-- ============================================== -->
-    <!-- System Status -->
-    <!-- ============================================== -->
+    <!-- =====================================================
+         SIDEBAR
+         ===================================================== -->
 
-    <div class="card mb-4">
+    <aside class="sidebar">
 
-        <div class="card-header">
+        <!-- Logo -->
 
-            <h5>System Status</h5>
+        <div class="brand-block">
 
-        </div>
+            <img
+                src="assets/images/ai-dpi-logo.png"
+                alt="AI-DPI Logo"
+                class="brand-logo">
 
-        <div class="card-body">
-
-            <table class="table">
-
-                <tr>
-
-                    <td>Backend Server</td>
-
-                    <td id="backendStatus">
-                        🟢 Online
-                    </td>
-
-                </tr>
-
-                <tr>
-
-                    <td>MongoDB</td>
-
-                    <td id="mongoStatus">
-                        🟢 Connected
-                    </td>
-
-                </tr>
-
-                <tr>
-
-                    <td>Python Engine</td>
-
-                    <td id="pythonStatus">
-                        🟢 Ready
-                    </td>
-
-                </tr>
-
-                <tr>
-
-                    <td>Simulator</td>
-
-                    <td id="simulatorStatus">
-                        🟢 Ready
-                    </td>
-
-                </tr>
-
-            </table>
-
-        </div>
-
-    </div>
-
-
-    <!-- ============================================== -->
-    <!-- Preferences -->
-    <!-- ============================================== -->
-
-    <div class="card mb-4">
-
-        <div class="card-header">
-
-            <h5>Preferences</h5>
-
-        </div>
-
-        <div class="card-body">
-
-            <div class="form-check mb-3">
-
-                <input
-                    class="form-check-input"
-                    type="checkbox"
-                    id="autoRefresh">
-
-                <label class="form-check-label">
-
-                    Auto Refresh Dashboard
-
-                </label>
-
-            </div>
-
-            <div class="form-check mb-3">
-
-                <input
-                    class="form-check-input"
-                    type="checkbox"
-                    id="notifications">
-
-                <label class="form-check-label">
-
-                    Enable Notifications
-
-                </label>
-
-            </div>
-
-            <div class="form-check">
-
-                <input
-                    class="form-check-input"
-                    type="checkbox"
-                    id="darkTheme">
-
-                <label class="form-check-label">
-
-                    Dark Theme
-
-                </label>
-
+            <div class="brand-caption">
+                SECURITY CONSOLE
             </div>
 
         </div>
 
-    </div>
+
+        <!-- Navigation -->
+
+        <div class="sidebar-section">
+
+            <div class="sidebar-label">
+                TELEMETRY MODULES
+            </div>
 
 
-    <!-- ============================================== -->
-    <!-- Statistics -->
-    <!-- ============================================== -->
+            <nav class="sidebar-nav">
 
-    <div class="card mb-4">
+                <a
+                    href="dashboard.html"
+                    class="nav-item">
 
-        <div class="card-header">
+                    <span class="nav-icon">
+                        ▦
+                    </span>
 
-            <h5>Database Statistics</h5>
+                    <span>
+                        Dashboard
+                    </span>
+
+                </a>
+
+
+                <a
+                    href="packets.html"
+                    class="nav-item">
+
+                    <span class="nav-icon">
+                        ◉
+                    </span>
+
+                    <span>
+                        Packets
+                    </span>
+
+                </a>
+
+
+                <a
+                    href="alerts.html"
+                    class="nav-item">
+
+                    <span class="nav-icon">
+                        ♢
+                    </span>
+
+                    <span>
+                        Threats
+                    </span>
+
+                </a>
+
+
+                <a
+                    href="analytics.html"
+                    class="nav-item">
+
+                    <span class="nav-icon">
+                        ▥
+                    </span>
+
+                    <span>
+                        Analytics
+                    </span>
+
+                </a>
+
+
+                <a
+                    href="settings.html"
+                    class="nav-item active">
+
+                    <span class="nav-icon">
+                        ⚙
+                    </span>
+
+                    <span>
+                        Settings
+                    </span>
+
+                </a>
+
+            </nav>
 
         </div>
 
-        <div class="card-body">
 
-            <p>Total Packets :
-                <strong id="totalPackets">0</strong>
-            </p>
+        <!-- Sidebar Footer -->
 
-            <p>Total Threats :
-                <strong id="totalThreats">0</strong>
-            </p>
+        <div class="sidebar-footer">
+
+            <div class="engine-card">
+
+                <div class="engine-top">
+
+                    <span class="live-dot"></span>
+
+                    <span>
+                        DPI ENGINE
+                    </span>
+
+                    <strong>
+                        ACTIVE
+                    </strong>
+
+                </div>
+
+
+                <div class="engine-meta">
+
+                    Real-time inspection enabled
+
+                </div>
+
+
+                <div class="engine-line">
+
+                    <span></span>
+
+                </div>
+
+            </div>
+
+
+            <div class="version">
+
+                AI-DPI SECURITY CONSOLE
+
+            </div>
 
         </div>
 
-    </div>
+    </aside>
 
 
-    <!-- ============================================== -->
-    <!-- Danger Zone -->
-    <!-- ============================================== -->
 
-    <div class="card border-danger">
+    <!-- =====================================================
+         MAIN CONTENT
+         ===================================================== -->
 
-        <div class="card-header bg-danger text-white">
+    <main class="main-content">
 
-            Danger Zone
+
+        <!-- =================================================
+             TOP BAR
+             ================================================= -->
+
+        <header class="topbar">
+
+
+            <!-- Page Heading -->
+
+            <div class="page-heading">
+
+                <div class="eyebrow">
+
+                    SOC CONSOLE / SYSTEM CONFIGURATION
+
+                </div>
+
+
+                <h1>
+
+                    System &amp; Console Settings
+
+                </h1>
+
+
+                <p class="page-description">
+
+                    Application configuration, API connectivity,
+                    detection settings and interface preferences.
+
+                </p>
+
+            </div>
+
+
+
+            <!-- Topbar Actions -->
+
+            <div class="topbar-actions">
+
+
+                <div class="system-indicator">
+
+                    <span class="status-dot"></span>
+
+                    <span>
+                        API
+                    </span>
+
+                    <strong id="backendStatusTop">
+                        CONNECTED
+                    </strong>
+
+                </div>
+
+
+                <div class="system-indicator">
+
+                    <span class="status-dot"></span>
+
+                    <span>
+                        LIVE
+                    </span>
+
+                </div>
+
+
+                <button
+                    class="secondary-button"
+                    onclick="location.reload()">
+
+                    ↻ Refresh
+
+                </button>
+
+
+                <button
+                    class="primary-button"
+                    onclick="savePreferences()">
+
+                    ▣ Save Preferences
+
+                </button>
+
+            </div>
+
+        </header>
+
+
+
+        <!-- =================================================
+             CONTENT
+             ================================================= -->
+
+        <div class="settings-content">
+
+
+            <!-- =================================================
+                 SYSTEM STATUS HEADER
+                 ================================================= -->
+
+            <section class="section-heading">
+
+                <div>
+
+                    <div class="eyebrow">
+                        SYSTEM STATUS
+                    </div>
+
+                    <h2>
+                        Runtime Health
+                    </h2>
+
+                    <p>
+                        Current status of the AI-DPI application
+                        services and inspection components.
+                    </p>
+
+                </div>
+
+
+                <div class="production-badge">
+
+                    <span class="status-dot"></span>
+
+                    PRODUCTION READY
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =================================================
+                 STATUS CARDS
+                 ================================================= -->
+
+            <section class="status-grid">
+
+
+                <!-- Backend -->
+
+                <div class="status-card">
+
+                    <div class="status-card-top">
+
+                        <span class="card-icon">
+                            ◈
+                        </span>
+
+                        <span class="status-badge success">
+                            ONLINE
+                        </span>
+
+                    </div>
+
+
+                    <div class="eyebrow">
+                        API GATEWAY
+                    </div>
+
+
+                    <h3>
+                        Backend Server
+                    </h3>
+
+
+                    <p>
+                        Express API service
+                    </p>
+
+
+                    <div
+                        id="backendStatus"
+                        class="runtime-status">
+
+                        <span class="status-dot"></span>
+
+                        Online
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- MongoDB -->
+
+                <div class="status-card">
+
+                    <div class="status-card-top">
+
+                        <span class="card-icon">
+                            ◉
+                        </span>
+
+                        <span class="status-badge success">
+                            CONNECTED
+                        </span>
+
+                    </div>
+
+
+                    <div class="eyebrow">
+                        DATABASE
+                    </div>
+
+
+                    <h3>
+                        MongoDB
+                    </h3>
+
+
+                    <p>
+                        MongoDB Atlas database
+                    </p>
+
+
+                    <div
+                        id="mongoStatus"
+                        class="runtime-status">
+
+                        <span class="status-dot"></span>
+
+                        Connected
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- Python -->
+
+                <div class="status-card">
+
+                    <div class="status-card-top">
+
+                        <span class="card-icon">
+                            &lt;/&gt;
+                        </span>
+
+                        <span class="status-badge success">
+                            READY
+                        </span>
+
+                    </div>
+
+
+                    <div class="eyebrow">
+                        DETECTION ENGINE
+                    </div>
+
+
+                    <h3>
+                        Python Engine
+                    </h3>
+
+
+                    <p>
+                        Packet inspection &amp; DPI
+                    </p>
+
+
+                    <div
+                        id="pythonStatus"
+                        class="runtime-status">
+
+                        <span class="status-dot"></span>
+
+                        Ready
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- Simulator -->
+
+                <div class="status-card">
+
+                    <div class="status-card-top">
+
+                        <span class="card-icon">
+                            ⚡
+                        </span>
+
+                        <span class="status-badge success">
+                            READY
+                        </span>
+
+                    </div>
+
+
+                    <div class="eyebrow">
+                        TEST MODULE
+                    </div>
+
+
+                    <h3>
+                        Attack Simulator
+                    </h3>
+
+
+                    <p>
+                        SQL Injection &amp; XSS testing
+                    </p>
+
+
+                    <div
+                        id="simulatorStatus"
+                        class="runtime-status">
+
+                        <span class="status-dot"></span>
+
+                        Ready
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =================================================
+                 MAIN SETTINGS GRID
+                 ================================================= -->
+
+            <section class="settings-grid">
+
+
+                <!-- =================================================
+                     PREFERENCES
+                     ================================================= -->
+
+                <div class="panel preferences-panel">
+
+
+                    <div class="panel-header">
+
+                        <div>
+
+                            <div class="eyebrow">
+                                CONSOLE PREFERENCES
+                            </div>
+
+                            <h2>
+                                Client Preferences
+                            </h2>
+
+                        </div>
+
+
+                        <span class="panel-icon">
+                            ⚙
+                        </span>
+
+                    </div>
+
+
+
+                    <div class="preference-list">
+
+
+                        <!-- Auto Refresh -->
+
+                        <div class="preference-row">
+
+                            <div class="preference-info">
+
+                                <strong>
+                                    Auto Refresh Dashboard
+                                </strong>
+
+                                <span>
+                                    Automatically refresh packet
+                                    and threat data.
+                                </span>
+
+                            </div>
+
+
+                            <label class="toggle">
+
+                                <input
+                                    type="checkbox"
+                                    id="autoRefresh">
+
+                                <span class="slider"></span>
+
+                            </label>
+
+                        </div>
+
+
+
+                        <!-- Notifications -->
+
+                        <div class="preference-row">
+
+                            <div class="preference-info">
+
+                                <strong>
+                                    Enable Notifications
+                                </strong>
+
+                                <span>
+                                    Display alerts when new
+                                    threats are detected.
+                                </span>
+
+                            </div>
+
+
+                            <label class="toggle">
+
+                                <input
+                                    type="checkbox"
+                                    id="notifications">
+
+                                <span class="slider"></span>
+
+                            </label>
+
+                        </div>
+
+
+
+                        <!-- Dark Theme -->
+
+                        <div class="preference-row">
+
+                            <div class="preference-info">
+
+                                <strong>
+                                    Dark Theme
+                                </strong>
+
+                                <span>
+                                    Use the dark security console
+                                    interface.
+                                </span>
+
+                            </div>
+
+
+                            <label class="toggle">
+
+                                <input
+                                    type="checkbox"
+                                    id="darkTheme">
+
+                                <span class="slider"></span>
+
+                            </label>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- =================================================
+                     DATABASE STATISTICS
+                     ================================================= -->
+
+                <div class="panel statistics-panel">
+
+
+                    <div class="panel-header">
+
+                        <div>
+
+                            <div class="eyebrow">
+                                DATABASE TELEMETRY
+                            </div>
+
+                            <h2>
+                                Traffic Statistics
+                            </h2>
+
+                        </div>
+
+
+                        <span class="panel-icon">
+                            ◉
+                        </span>
+
+                    </div>
+
+
+
+                    <div class="metric-grid">
+
+
+                        <div class="metric-card">
+
+                            <span class="metric-label">
+                                TOTAL PACKETS
+                            </span>
+
+                            <strong id="totalPackets">
+                                0
+                            </strong>
+
+                            <span class="metric-description">
+                                Packets stored in database
+                            </span>
+
+                        </div>
+
+
+                        <div class="metric-card">
+
+                            <span class="metric-label">
+                                TOTAL THREATS
+                            </span>
+
+                            <strong id="totalThreats">
+                                0
+                            </strong>
+
+                            <span class="metric-description">
+                                Detected malicious packets
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <div class="database-status">
+
+                        <span class="status-dot"></span>
+
+                        <div>
+
+                            <strong>
+                                Database telemetry active
+                            </strong>
+
+                            <span>
+                                Statistics are retrieved from
+                                the captured packet collection.
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =================================================
+                 DETECTION OVERVIEW
+                 ================================================= -->
+
+            <section class="panel detection-panel">
+
+
+                <div class="panel-header">
+
+                    <div>
+
+                        <div class="eyebrow">
+                            DPI INSPECTION &amp; SIGNATURE DETECTION
+                        </div>
+
+                        <h2>
+                            Detection Engine Overview
+                        </h2>
+
+                        <p>
+                            Active heuristic rules, payload signature
+                            parsers and threat classification modules.
+                        </p>
+
+                    </div>
+
+
+                    <span class="engine-active">
+                        ACTIVE ENGINE
+                    </span>
+
+                </div>
+
+
+
+                <div class="detection-grid">
+
+
+                    <div class="detection-item">
+
+                        <div class="detection-title">
+
+                            <strong>
+                                SQL Injection
+                            </strong>
+
+                            <span>
+                                RULE-01
+                            </span>
+
+                        </div>
+
+                        <p>
+                            Detects SQL injection patterns and
+                            suspicious database queries.
+                        </p>
+
+                        <div class="detection-meta">
+
+                            <span>
+                                Pattern Match
+                            </span>
+
+                            <strong>
+                                ENABLED
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <div class="detection-item">
+
+                        <div class="detection-title">
+
+                            <strong>
+                                Cross-Site Scripting
+                            </strong>
+
+                            <span>
+                                RULE-02
+                            </span>
+
+                        </div>
+
+                        <p>
+                            Detects script injection and malicious
+                            HTML payloads.
+                        </p>
+
+                        <div class="detection-meta">
+
+                            <span>
+                                Pattern Match
+                            </span>
+
+                            <strong>
+                                ENABLED
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <div class="detection-item">
+
+                        <div class="detection-title">
+
+                            <strong>
+                                Malformed Payloads
+                            </strong>
+
+                            <span>
+                                PROTOCOL
+                            </span>
+
+                        </div>
+
+                        <p>
+                            Detects malformed headers, oversized
+                            chunks and suspicious packet structures.
+                        </p>
+
+                        <div class="detection-meta">
+
+                            <span>
+                                Protocol Validator
+                            </span>
+
+                            <strong>
+                                READY
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                <div class="inspection-status">
+
+                    <span class="status-dot"></span>
+
+                    <div>
+
+                        <strong>
+                            Inspection Status: Ingress Protocol Stream Active
+                        </strong>
+
+                        <span>
+                            Incoming packets are parsed across IP,
+                            TCP/UDP headers and raw decoded payloads.
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =================================================
+                 APPLICATION STACK
+                 ================================================= -->
+
+            <section class="panel stack-panel">
+
+
+                <div class="panel-header">
+
+                    <div>
+
+                        <div class="eyebrow">
+                            APPLICATION &amp; TECHNOLOGY STACK
+                        </div>
+
+                        <h2>
+                            System Architecture
+                        </h2>
+
+                        <p>
+                            Core services and technologies powering
+                            the AI-DPI security console.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+
+                <div class="stack-grid">
+
+
+                    <div class="stack-item">
+
+                        <span class="stack-icon">
+                            ◈
+                        </span>
+
+                        <div>
+
+                            <strong>
+                                Backend Service
+                            </strong>
+
+                            <span>
+                                Node.js + Express API Layer
+                            </span>
+
+                        </div>
+
+                        <span class="stack-status">
+                            ACTIVE
+                        </span>
+
+                    </div>
+
+
+
+                    <div class="stack-item">
+
+                        <span class="stack-icon">
+                            ◉
+                        </span>
+
+                        <div>
+
+                            <strong>
+                                Database
+                            </strong>
+
+                            <span>
+                                MongoDB Atlas
+                            </span>
+
+                        </div>
+
+                        <span class="stack-status">
+                            SYNCED
+                        </span>
+
+                    </div>
+
+
+
+                    <div class="stack-item">
+
+                        <span class="stack-icon">
+                            &lt;/&gt;
+                        </span>
+
+                        <div>
+
+                            <strong>
+                                Detection Engine
+                            </strong>
+
+                            <span>
+                                Python DPI Engine &amp; Heuristics
+                            </span>
+
+                        </div>
+
+                        <span class="stack-status">
+                            INTEGRATED
+                        </span>
+
+                    </div>
+
+
+
+                    <div class="stack-item">
+
+                        <span class="stack-icon">
+                            ▣
+                        </span>
+
+                        <div>
+
+                            <strong>
+                                Console Frontend
+                            </strong>
+
+                            <span>
+                                HTML, CSS &amp; Vanilla JavaScript
+                            </span>
+
+                        </div>
+
+                        <span class="stack-status">
+                            STANDALONE
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =================================================
+                 DANGER ZONE
+                 ================================================= -->
+
+            <section class="danger-panel">
+
+
+                <div class="danger-header">
+
+                    <div>
+
+                        <div class="eyebrow danger-eyebrow">
+                            DESTRUCTIVE OPERATIONS
+                        </div>
+
+                        <h2>
+                            Danger Zone
+                        </h2>
+
+                        <p>
+                            These actions permanently affect stored
+                            packet data. Use with caution.
+                        </p>
+
+                    </div>
+
+
+                    <span class="danger-icon">
+                        !
+                    </span>
+
+                </div>
+
+
+
+                <div class="danger-action">
+
+
+                    <div>
+
+                        <strong>
+                            Delete All Packets
+                        </strong>
+
+                        <span>
+                            Permanently remove every packet stored
+                            in MongoDB.
+                        </span>
+
+                    </div>
+
+
+                    <button
+                        id="deleteAllPackets"
+                        class="danger-button">
+
+                        Delete All Packets
+
+                    </button>
+
+                </div>
+
+            </section>
+
 
         </div>
 
-        <div class="card-body">
-
-            <p>
-
-                Delete every packet stored in MongoDB.
-
-            </p>
-
-            <button
-
-                id="deleteAllPackets"
-
-                class="btn btn-danger">
-
-                Delete All Packets
-
-            </button>
-
-        </div>
-
-    </div>
+    </main>
 
 </div>
+
+
+
+<!-- =====================================================
+     JAVASCRIPT
+     ===================================================== -->
 
 <script src="js/api.js"></script>
 
 <script src="js/settings.js"></script>
+
+
+<!-- =====================================================
+     OPTIONAL UI HELPER
+     ===================================================== -->
+
+<script>
+
+function savePreferences() {
+
+    const autoRefresh =
+        document.getElementById("autoRefresh").checked;
+
+    const notifications =
+        document.getElementById("notifications").checked;
+
+    const darkTheme =
+        document.getElementById("darkTheme").checked;
+
+
+    localStorage.setItem(
+        "autoRefresh",
+        autoRefresh
+    );
+
+    localStorage.setItem(
+        "notifications",
+        notifications
+    );
+
+    localStorage.setItem(
+        "darkTheme",
+        darkTheme
+    );
+
+
+    alert("Preferences saved successfully.");
+
+}
+
+</script>
 
 </body>
 
