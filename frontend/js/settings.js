@@ -36,7 +36,7 @@ async function loadStatistics() {
 
     const threats = packets.filter(packet =>
 
-        packet.status === "Threat"
+        packet.status !== "SAFE"
 
     );
 
